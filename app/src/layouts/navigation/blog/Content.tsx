@@ -21,8 +21,7 @@ import Button from "@mui/material/Button";
 import LoginIcon from "@mui/icons-material/Login";
 
 // ** icons
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import XIcon from "@mui/icons-material/X";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
@@ -38,7 +37,6 @@ import {
   SITE_TITLE,
   PERSONAL_DESCRIPTION,
   TWITTER_URL,
-  INSTAGRAM_URL,
   GITHUB_URL,
   LINKEDIN_URL,
 } from "@/config";
@@ -135,9 +133,9 @@ const LoginButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   fontSize: '1rem',
   color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+  backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
   },
   '& .MuiButton-startIcon': {
     marginRight: theme.spacing(1),
@@ -190,28 +188,32 @@ export default function NavigationContent({
 
         <SocialMedia>
           <li>
-            <Link href={TWITTER_URL}>
-              <Tooltip title="Twitter">
-                <TwitterIcon color="action" />
+            <Link 
+              href={TWITTER_URL || 'https://x.com/rohan__kamath'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              component="a"
+              onClick={(e) => {
+                if (!TWITTER_URL) {
+                  e.preventDefault();
+                  window.open('https://x.com/rohan__kamath', '_blank');
+                }
+              }}
+            >
+              <Tooltip title="X (Twitter)">
+                <XIcon color="action" />
               </Tooltip>
             </Link>
           </li>
           <li>
-            <Link href={INSTAGRAM_URL}>
-              <Tooltip title="Instagram">
-                <InstagramIcon color="action" />
-              </Tooltip>
-            </Link>
-          </li>
-          <li>
-            <Link href={GITHUB_URL}>
+            <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
               <Tooltip title="Github">
                 <GitHubIcon color="action" />
               </Tooltip>
             </Link>
           </li>
           <li>
-            <Link href={LINKEDIN_URL}>
+            <Link href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
               <Tooltip title="Linkedin">
                 <LinkedInIcon color="action" />
               </Tooltip>
