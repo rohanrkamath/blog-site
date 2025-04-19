@@ -3,6 +3,7 @@ import { default as NextLink } from "next/link";
 
 // ** third party
 import { formatDistanceToNow } from "date-fns";
+import { enUS } from "date-fns/locale";
 import readingTime from "reading-time";
 
 // ** mui
@@ -85,6 +86,7 @@ export default function ArticleDetail({ data }: ArticleDetailProps) {
               <Box component="span">
                 {formatDistanceToNow(new Date(data.publishingDate), {
                   addSuffix: true,
+                  locale: enUS
                 })}
               </Box>
               <Box component="span">

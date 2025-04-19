@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 
 // ** third party
 import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 // ** services
 import ArticleService from "@/services/ArticleService";
@@ -78,7 +79,7 @@ export default function AdminArticleIndex() {
       headerName: "Date",
       width: 200,
       renderCell: ({ row }: GridRenderCellParams<ArticleModel>) =>
-        format(new Date(row.publishingDate), "PP - p"),
+        format(new Date(row.publishingDate), "PP - p", { locale: enUS }),
     },
     {
       field: "categories",

@@ -5,6 +5,7 @@ import Image from "next/image";
 
 // ** third party
 import { formatDistanceToNow } from "date-fns";
+import { enUS } from "date-fns/locale";
 import readingTime from "reading-time";
 
 // ** mui
@@ -77,6 +78,7 @@ function ArticleItem({ data }: ArticleItemProps) {
             <Box component="span">
               {formatDistanceToNow(new Date(data.publishingDate), {
                 addSuffix: true,
+                locale: enUS
               })}
             </Box>
             <Box component="span">

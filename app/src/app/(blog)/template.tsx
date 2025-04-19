@@ -15,7 +15,7 @@ import Navigation from "@/layouts/navigation/blog";
 import Footer from "@/layouts/Footer";
 
 // ** components
-import DarkModeToggle from "@/components/DarkModeToggle";
+import TopNavBar from "@/components/TopNavBar";
 
 // ** services
 import CategoryService from "@/services/CategoryService";
@@ -55,6 +55,7 @@ export default async function Template({ children }: { children: ReactNode }) {
           width: '100%'
         }}
       >
+        <TopNavBar />
         <Container 
           component="main"
           maxWidth={false} 
@@ -84,7 +85,6 @@ export default async function Template({ children }: { children: ReactNode }) {
           <Footer />
         </Container>
       </Box>
-      <DarkModeToggle />
     </Fragment>
   );
 }

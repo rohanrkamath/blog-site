@@ -41,19 +41,6 @@ import {
   LINKEDIN_URL,
 } from "@/config";
 
-// const StyledDivider = styled(Divider)(({ theme }) => ({
-//   fontSize: "1.5rem",
-//   fontWeight: "bold",
-//   textAlign: "center",
-//   padding: 0,
-//   "& a": {
-//     display: "block",
-//     width: "100%",
-//     color: theme.palette.primary.contrastText,
-//     textDecoration: "none",
-//   },
-// }));
-
 const Title = styled("h1")(({ theme }) => ({
   fontSize: "2rem",
   fontWeight: "bold",
@@ -65,8 +52,10 @@ const Title = styled("h1")(({ theme }) => ({
     width: "100%",
     color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.primary.contrastText,
     textDecoration: "none",
+    transition: 'opacity 0.2s ease',
     "&:hover": {
-      color: theme.palette.primary.main,
+      opacity: 0.85,
+      color: 'inherit'
     }
   },
 }));
@@ -264,7 +253,7 @@ export default function NavigationContent({
               textTransform="uppercase"
               fontWeight="bold"
             >
-              Categories
+              Blog Categories
             </Typography>
           </Padding>
 

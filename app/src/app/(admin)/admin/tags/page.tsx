@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 
 // ** third party
 import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 // ** services
 import TagService from "@/services/TagService";
@@ -73,7 +74,7 @@ export default function AdminTags() {
       renderCell: ({ row }: GridRenderCellParams<TagModel>) => {
         if (!row.updatedAt) return '-';
         const date = new Date(row.updatedAt);
-        return isNaN(date.getTime()) ? '-' : format(date, "PP - p");
+        return isNaN(date.getTime()) ? '-' : format(date, "PP - p", { locale: enUS });
       },
     },
   ];

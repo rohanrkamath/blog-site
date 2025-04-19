@@ -1,5 +1,6 @@
 // ** third party
 import { formatDistanceToNow } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 // ** mui
 import Box from "@mui/material/Box";
@@ -54,6 +55,7 @@ export default function PageDetail({ data }: PageDetailProps) {
             <Box component="span">
               {formatDistanceToNow(new Date(data.publishingDate), {
                 addSuffix: true,
+                locale: enUS
               })}
             </Box>
             <Box component="span">{`${data.viewCount} views`}</Box>

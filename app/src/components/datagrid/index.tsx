@@ -140,16 +140,18 @@ export default function MuiDataGrid({
         rows={rows}
         columns={columns}
         rowCount={totalResults || 0}
-        // onPageSizeChange={handlePageSizeChange}
-        localeText={enUS.localeText}
+        localeText={{
+          ...enUS.components.MuiDataGrid.defaultProps.localeText,
+          MuiTablePagination: {
+            labelRowsPerPage: 'Rows per page:',
+            labelDisplayedRows: ({ from, to, count }) =>
+              `${from}-${to} of ${count}`,
+          },
+        }}
         slotProps={tableComponentsProps}
         slots={{
           toolbar: Toolbar as GridSlots["toolbar"],
         }}
-        // componentsProps={tableComponentsProps}
-        // components={{
-        //   Toolbar,
-        // }}
       />
     </Paper>
   );
