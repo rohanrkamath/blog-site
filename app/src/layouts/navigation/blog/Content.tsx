@@ -57,15 +57,19 @@ import {
 // }));
 
 const Title = styled("h1")(({ theme }) => ({
-  fontSize: "1.5rem",
+  fontSize: "2rem",
   fontWeight: "bold",
   textAlign: "center",
-  padding: 0,
+  padding: theme.spacing(2, 0),
+  margin: 0,
   "& a": {
     display: "block",
     width: "100%",
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.primary.contrastText,
     textDecoration: "none",
+    "&:hover": {
+      color: theme.palette.primary.main,
+    }
   },
 }));
 
@@ -123,11 +127,21 @@ const CategoriesWrapper = styled(Box)(({ theme }) => ({
 
 const LoginButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
   width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: theme.spacing(1),
+  padding: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
+  fontWeight: 500,
+  textTransform: 'none',
+  fontSize: '1rem',
+  color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.primary.contrastText,
+  backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+  '&:hover': {
+    backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+  },
+  '& .MuiButton-startIcon': {
+    marginRight: theme.spacing(1),
+  }
 }));
 
 type NavigationContentProps = {
@@ -149,7 +163,7 @@ export default function NavigationContent({
     <StyledNav>
       <ProfileSection>
         <Title>
-          <Link component={NextLink} href="/">
+          <Link component={NextLink} href="/" underline="none">
             {SITE_TITLE}
           </Link>
         </Title>
@@ -210,6 +224,7 @@ export default function NavigationContent({
           color="primary"
           startIcon={<LoginIcon />}
           onClick={handleLogin}
+          disableElevation
         >
           Login
         </LoginButton>
