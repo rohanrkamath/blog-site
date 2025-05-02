@@ -47,8 +47,8 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
       const mdxContent = document.querySelector('.mdx-content');
       if (!mdxContent) return [];
 
-      // Only select h2 and h3 headings
-      const headingElements = mdxContent.querySelectorAll('h2, h3');
+      // Select h2, h3, and h4 headings
+      const headingElements = mdxContent.querySelectorAll('h2, h3, h4');
       const seenTexts = new Set<string>();
       const flatHeadings: Heading[] = Array.from(headingElements)
         .filter(el => {
@@ -69,16 +69,21 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
           };
         });
 
-      // Build hierarchy (only h2 and h3)
+      // Build hierarchy (h2 -> h3 -> h4)
       const root: Heading[] = [];
       let currentH2: Heading | null = null;
+      let currentH3: Heading | null = null;
 
       flatHeadings.forEach((heading) => {
         if (heading.level === 2) {
           currentH2 = heading;
+          currentH3 = null;
           root.push(heading);
         } else if (heading.level === 3 && currentH2) {
+          currentH3 = heading;
           currentH2.children.push(heading);
+        } else if (heading.level === 4 && currentH3) {
+          currentH3.children.push(heading);
         }
       });
 
@@ -112,23 +117,25 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
       const headingElements = Array.from(mdxContent.querySelectorAll('h2, h3'));
       let currentActiveId = "";
       
-      for (let i = headingElements.length - 1; i >= 0; i--) {
-        const element = headingElements[i];
+      // Find the first heading that's above the viewport middle
+      for (const element of headingElements) {
         const rect = element.getBoundingClientRect();
-        
-        if (rect.top <= window.innerHeight / 3) {
+        // Adjust threshold to be closer to the top of the viewport
+        if (rect.top <= 100) { // Changed from window.innerHeight / 3
           currentActiveId = element.id;
+        } else {
           break;
         }
       }
       
+      // Handle case when we're at the bottom of the page
       if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 50) {
-        const visibleHeadings = headingElements.filter(element => {
+        const lastVisible = headingElements.filter(element => {
           const rect = element.getBoundingClientRect();
           return rect.top <= window.innerHeight;
-        });
-        if (visibleHeadings.length > 0) {
-          currentActiveId = visibleHeadings[visibleHeadings.length - 1].id;
+        }).pop();
+        if (lastVisible) {
+          currentActiveId = lastVisible.id;
         }
       }
 
@@ -149,7 +156,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   const renderHeading = (heading: Heading) => {
     const isActive = activeId === heading.id;
     const isSectionActive = isActiveSection(heading);
-    const hasH3Children = heading.children.length > 0;
+    const hasChildren = heading.children.length > 0;
 
     return (
       <Box key={heading.id}>
@@ -194,51 +201,102 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             {heading.text}
           </Link>
         </Box>
-        {hasH3Children && (
+        {hasChildren && (
           <Collapse in={isSectionActive}>
             <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
               {heading.children.map(child => (
-                <Box
-                  key={child.id}
-                  component="li"
-                  sx={{
-                    position: 'relative',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      width: '3px',
-                      bgcolor: child.id === activeId ? 'primary.main' : 'transparent',
-                      borderRadius: '0 4px 4px 0',
-                    },
-                  }}
-                >
-                  <Link
-                    href={`#${child.id}`}
-                    underline="none"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById(child.id)?.scrollIntoView({
-                        behavior: 'smooth'
-                      });
-                    }}
+                <Box key={child.id}>
+                  <Box
+                    component="li"
                     sx={{
-                      display: 'block',
-                      pl: 4,
-                      py: 1,
-                      color: child.id === activeId ? 'primary.main' : 'text.secondary',
-                      fontWeight: child.id === activeId ? 500 : 400,
-                      fontSize: '0.9rem',
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        color: 'primary.main',
+                      position: 'relative',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '3px',
+                        bgcolor: child.id === activeId ? 'primary.main' : 'transparent',
+                        borderRadius: '0 4px 4px 0',
                       },
                     }}
                   >
-                    {child.text}
-                  </Link>
+                    <Link
+                      href={`#${child.id}`}
+                      underline="none"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById(child.id)?.scrollIntoView({
+                          behavior: 'smooth'
+                        });
+                      }}
+                      sx={{
+                        display: 'block',
+                        pl: 4,
+                        py: 1,
+                        color: child.id === activeId ? 'primary.main' : 'text.secondary',
+                        fontWeight: child.id === activeId ? 500 : 400,
+                        fontSize: '0.9rem',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          color: 'primary.main',
+                        },
+                      }}
+                    >
+                      {child.text}
+                    </Link>
+                  </Box>
+                  {child.children.length > 0 && (
+                    <Collapse in={child.id === activeId || child.children.some(h4 => h4.id === activeId)}>
+                      <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+                        {child.children.map(h4Child => (
+                          <Box
+                            key={h4Child.id}
+                            component="li"
+                            sx={{
+                              position: 'relative',
+                              '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: '3px',
+                                bgcolor: h4Child.id === activeId ? 'primary.main' : 'transparent',
+                                borderRadius: '0 4px 4px 0',
+                              },
+                            }}
+                          >
+                            <Link
+                              href={`#${h4Child.id}`}
+                              underline="none"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                document.getElementById(h4Child.id)?.scrollIntoView({
+                                  behavior: 'smooth'
+                                });
+                              }}
+                              sx={{
+                                display: 'block',
+                                pl: 6,
+                                py: 1,
+                                color: h4Child.id === activeId ? 'primary.main' : 'text.secondary',
+                                fontWeight: h4Child.id === activeId ? 500 : 400,
+                                fontSize: '0.85rem',
+                                transition: 'all 0.2s ease',
+                                '&:hover': {
+                                  color: 'primary.main',
+                                },
+                              }}
+                            >
+                              {h4Child.text}
+                            </Link>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Collapse>
+                  )}
                 </Box>
               ))}
             </Box>

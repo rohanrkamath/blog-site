@@ -17,8 +17,6 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import Button from "@mui/material/Button";
-import LoginIcon from "@mui/icons-material/Login";
 
 // ** icons
 import XIcon from "@mui/icons-material/X";
@@ -112,25 +110,6 @@ const CategoriesWrapper = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(1.5),
 }));
 
-const LoginButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  width: '100%',
-  padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
-  fontWeight: 500,
-  textTransform: 'none',
-  fontSize: '1rem',
-  color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-  '&:hover': {
-    backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-  },
-  '& .MuiButton-startIcon': {
-    marginRight: theme.spacing(1),
-  }
-}));
-
 type NavigationContentProps = {
   categories: CategoryModel[];
   navbarPages: PageModel[];
@@ -141,10 +120,6 @@ export default function NavigationContent({
   navbarPages,
 }: NavigationContentProps) {
   const router = useRouter();
-
-  const handleLogin = () => {
-    router.push('/admin/login');
-  };
 
   return (
     <StyledNav>
@@ -209,16 +184,6 @@ export default function NavigationContent({
             </Link>
           </li>
         </SocialMedia>
-
-        <LoginButton
-          variant="contained"
-          color="primary"
-          startIcon={<LoginIcon />}
-          onClick={handleLogin}
-          disableElevation
-        >
-          Login
-        </LoginButton>
       </ProfileSection>
 
       <Box padding={1} mb={2} mt={1}>

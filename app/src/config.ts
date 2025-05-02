@@ -24,13 +24,13 @@ export const DEFAULT_ERR_MESSAGE =
   "An error occurred. Please try again later.";
 
 export const ENDPOINT_URLS = {
-  category: `category`,
-  user: `user`,
-  tag: `tag`,
-  file: `file`,
-  article: `article`,
-  page: `page`,
-  report: `report`,
+  category: `api/category`,
+  user: `api/user`,
+  tag: `api/tag`,
+  file: `api/file`,
+  article: `api/article`,
+  page: `api/page`,
+  report: `api/report`,
 };
 
 // ** static variables

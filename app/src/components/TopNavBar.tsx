@@ -1,13 +1,14 @@
 "use client";
 
 import { Fragment } from "react";
-import { AppBar, Toolbar, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Button, Box, IconButton, Tooltip } from '@mui/material';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import DarkModeToggle from "@/components/DarkModeToggle";
+import LoginIcon from '@mui/icons-material/Login';
 
 const navigationItems = [
-  { label: 'About', href: '/about' },
+  { label: 'About', href: '/about-me' },
   { label: 'Buy Me Coffee', href: '/buy-me-coffee' },
 ];
 
@@ -27,7 +28,7 @@ export default function TopNavBar() {
     >
       <Toolbar>
         <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           {navigationItems.map((item) => (
             <Button
               key={item.href}
@@ -44,6 +45,23 @@ export default function TopNavBar() {
               {item.label}
             </Button>
           ))}
+          <Tooltip title="Admin Login">
+            <IconButton
+              component={Link}
+              href="/admin"
+              target="_blank"
+              rel="noopener noreferrer"
+              size="small"
+              sx={{
+                color: 'text.primary',
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                },
+              }}
+            >
+              <LoginIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
           <DarkModeToggle />
         </Box>
       </Toolbar>

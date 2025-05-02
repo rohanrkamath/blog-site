@@ -27,7 +27,12 @@ export default function RenderMdx({ content }: RenderMdxProps) {
           href={props.href}
           target={props.target}
           className={className}
-          color="GrayText"
+          sx={{
+            color: '#2196f3',
+            '&:hover': {
+              color: '#1976d2'
+            }
+          }}
           underline="hover"
         >
           {children}
