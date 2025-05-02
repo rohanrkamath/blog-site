@@ -5,12 +5,10 @@ import { useEffect, useState } from "react";
 
 // ** mui
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import Link from "@mui/material/Link";
+import Collapse from "@mui/material/Collapse";
 
 const TableOfContentsWrapper = styled(Box)(({ theme }) => ({
   position: 'sticky',
@@ -29,11 +27,12 @@ const TableOfContentsWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 
-type Heading = {
+interface Heading {
   id: string;
   text: string;
   level: number;
-};
+  children: Heading[];
+}
 
 type TableOfContentsProps = {
   content: string;
@@ -44,93 +43,231 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    // Extract headings from markdown content
     const extractHeadings = () => {
-      const headingRegex = /^(#{1,6})\s+(.+)$/gm;
-      const matches = Array.from(content.matchAll(headingRegex));
-      
-      return matches.map((match, index) => ({
-        id: `heading-${index}`,
-        text: match[2],
-        level: match[1].length,
-      }));
+      const mdxContent = document.querySelector('.mdx-content');
+      if (!mdxContent) return [];
+
+      // Only select h2 and h3 headings
+      const headingElements = mdxContent.querySelectorAll('h2, h3');
+      const seenTexts = new Set<string>();
+      const flatHeadings: Heading[] = Array.from(headingElements)
+        .filter(el => {
+          const text = el.textContent?.trim() || '';
+          if (!text || seenTexts.has(text)) return false;
+          seenTexts.add(text);
+          return true;
+        })
+        .map((el, index) => {
+          if (!el.id) {
+            el.id = `heading-${index}`;
+          }
+          return {
+            id: el.id,
+            text: el.textContent?.trim() || '',
+            level: parseInt(el.tagName[1]),
+            children: [],
+          };
+        });
+
+      // Build hierarchy (only h2 and h3)
+      const root: Heading[] = [];
+      let currentH2: Heading | null = null;
+
+      flatHeadings.forEach((heading) => {
+        if (heading.level === 2) {
+          currentH2 = heading;
+          root.push(heading);
+        } else if (heading.level === 3 && currentH2) {
+          currentH2.children.push(heading);
+        }
+      });
+
+      return root;
     };
 
-    setHeadings(extractHeadings());
+    setTimeout(() => {
+      const headingsList = extractHeadings();
+      setHeadings(headingsList);
 
-    // Add IDs to the actual headings in the document
-    const article = document.querySelector('article');
-    if (article) {
-      const headingElements = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
-      headingElements.forEach((el, index) => {
-        el.id = `heading-${index}`;
-      });
-    }
-  }, [content]);
+      // Set initial active heading
+      const mdxContent = document.querySelector('.mdx-content');
+      if (mdxContent) {
+        const headingElements = Array.from(mdxContent.querySelectorAll('h2, h3'));
+        for (const element of headingElements) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+            setActiveId(element.id);
+            break;
+          }
+        }
+      }
+    }, 100);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      const headingElements = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+      const mdxContent = document.querySelector('.mdx-content');
+      if (!mdxContent) return;
+
+      const headingElements = Array.from(mdxContent.querySelectorAll('h2, h3'));
+      let currentActiveId = "";
       
-      for (const element of headingElements) {
+      for (let i = headingElements.length - 1; i >= 0; i--) {
+        const element = headingElements[i];
         const rect = element.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
-          setActiveId(element.id);
+        
+        if (rect.top <= window.innerHeight / 3) {
+          currentActiveId = element.id;
           break;
         }
       }
+      
+      if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 50) {
+        const visibleHeadings = headingElements.filter(element => {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= window.innerHeight;
+        });
+        if (visibleHeadings.length > 0) {
+          currentActiveId = visibleHeadings[visibleHeadings.length - 1].id;
+        }
+      }
+
+      if (currentActiveId !== activeId) {
+        setActiveId(currentActiveId);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [activeId]);
 
-  const handleClick = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const isActiveSection = (heading: Heading): boolean => {
+    if (activeId === heading.id) return true;
+    return heading.children.some(child => child.id === activeId);
+  };
+
+  const renderHeading = (heading: Heading) => {
+    const isActive = activeId === heading.id;
+    const isSectionActive = isActiveSection(heading);
+    const hasH3Children = heading.children.length > 0;
+
+    return (
+      <Box key={heading.id}>
+        <Box
+          component="li"
+          sx={{
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: '3px',
+              bgcolor: isActive ? 'primary.main' : 'transparent',
+              borderRadius: '0 4px 4px 0',
+            },
+          }}
+        >
+          <Link
+            href={`#${heading.id}`}
+            underline="none"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById(heading.id)?.scrollIntoView({
+                behavior: 'smooth'
+              });
+            }}
+            sx={{
+              display: 'block',
+              pl: 2,
+              py: 1,
+              color: isActive ? 'primary.main' : 'text.primary',
+              fontWeight: isActive ? 500 : 400,
+              fontSize: '0.95rem',
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                color: 'primary.main',
+              },
+            }}
+          >
+            {heading.text}
+          </Link>
+        </Box>
+        {hasH3Children && (
+          <Collapse in={isSectionActive}>
+            <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+              {heading.children.map(child => (
+                <Box
+                  key={child.id}
+                  component="li"
+                  sx={{
+                    position: 'relative',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: '3px',
+                      bgcolor: child.id === activeId ? 'primary.main' : 'transparent',
+                      borderRadius: '0 4px 4px 0',
+                    },
+                  }}
+                >
+                  <Link
+                    href={`#${child.id}`}
+                    underline="none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById(child.id)?.scrollIntoView({
+                        behavior: 'smooth'
+                      });
+                    }}
+                    sx={{
+                      display: 'block',
+                      pl: 4,
+                      py: 1,
+                      color: child.id === activeId ? 'primary.main' : 'text.secondary',
+                      fontWeight: child.id === activeId ? 500 : 400,
+                      fontSize: '0.9rem',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        color: 'primary.main',
+                      },
+                    }}
+                  >
+                    {child.text}
+                  </Link>
+                </Box>
+              ))}
+            </Box>
+          </Collapse>
+        )}
+      </Box>
+    );
   };
 
   if (headings.length === 0) return null;
 
   return (
     <TableOfContentsWrapper>
-      <Typography variant="h6" gutterBottom>
+      <Typography 
+        variant="h6" 
+        gutterBottom 
+        sx={{ 
+          fontWeight: 700, 
+          mb: 3,
+          fontSize: '1.1rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px'
+        }}
+      >
         Table of Contents
       </Typography>
-      <List dense disablePadding>
-        {headings.map((heading) => (
-          <ListItem 
-            key={heading.id}
-            disablePadding
-            sx={{ 
-              pl: (heading.level - 1) * 2,
-            }}
-          >
-            <ListItemButton
-              onClick={() => handleClick(heading.id)}
-              selected={activeId === heading.id}
-              sx={{
-                borderRadius: 1,
-                '&.Mui-selected': {
-                  backgroundColor: 'action.selected',
-                },
-              }}
-            >
-              <ListItemText 
-                primary={heading.text}
-                primaryTypographyProps={{
-                  variant: 'body2',
-                  sx: { 
-                    fontWeight: activeId === heading.id ? 'bold' : 'normal',
-                  }
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+        {headings.map(heading => renderHeading(heading))}
+      </Box>
     </TableOfContentsWrapper>
   );
 } 

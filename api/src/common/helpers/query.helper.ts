@@ -39,6 +39,7 @@ export class QueryHelper {
       paging: false,
       searchQuery,
       order: order,
+      isShow: typeof query.isShow === 'boolean' ? query.isShow : undefined
     }
 
     if (

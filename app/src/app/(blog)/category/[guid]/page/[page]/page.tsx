@@ -4,14 +4,17 @@ import { Fragment } from "react";
 // ** next
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 // ** mui
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 // ** components
-import Pagination from "@/components/Pagination";
+import ServerPagination from "@/components/ServerPagination";
 import ArticleItem from "@/components/article/Item";
 
 // ** services
@@ -53,6 +56,7 @@ export default async function BlogCategoryPaging({
       page: Number(page),
       pageSize: PAGE_SIZE,
       paging: 1,
+      isShow: true,
     })
   )?.data as ListResponseModel<ArticleModel[]>;
 
@@ -78,7 +82,7 @@ export default async function BlogCategoryPaging({
       </Box>
 
       <Box component="section">
-        <Pagination
+        <ServerPagination
           routerUrl={`category/${guid}/page`}
           totalPages={data.totalPages}
           currentPage={data.currentPage}

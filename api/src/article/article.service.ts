@@ -85,6 +85,12 @@ export class ArticleService {
       const filter: FilterQuery<ArticleDocument> = {
         ...searchQuery,
       }
+
+      // Add isShow filter if it exists in the query
+      if (typeof query.isShow === 'boolean') {
+        filter.isShow = query.isShow;
+      }
+      
       if (category) filter.categories = category
       if (tag) filter.tags = tag
 

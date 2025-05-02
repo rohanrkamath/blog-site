@@ -4,6 +4,7 @@ import { Fragment } from "react";
 // ** next
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 // ** mui
 import Box from "@mui/material/Box";
@@ -23,39 +24,48 @@ import { OrderType } from "@/models/enums";
 // ** config
 import { PAGE_SIZE } from "@/config";
 
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
+// Disable all caching
+export const fetchCache = "force-no-store";
+
+export const revalidate = 0; // Disable static generation
+
 type BlogPagingProps = {
   params: { page: string };
 };
 
 export default async function BlogPaging({ params }: BlogPagingProps) {
+  // Force cache revalidation
+  headers();
+
   const page = params?.page;
 
   const currentPage = Number(page);
   if (isNaN(currentPage) || !currentPage) return notFound();
 
-  const data = (
-    await ArticleService.getItems({
-      page: currentPage,
-      pageSize: PAGE_SIZE,
-      order: "publishingDate",
-      orderBy: OrderType.ASC,
-    })
-  )?.data as ListResponseModel<ArticleModel[]>;
+  const articles = (await ArticleService.getItems({
+    page: Number(params.page),
+    pageSize: PAGE_SIZE,
+    order: "publishingDate",
+    orderBy: OrderType.ASC,
+    isShow: true
+  }))?.data as ListResponseModel<ArticleModel[]>;
 
-  if (!data) return notFound();
+  if (!articles) return notFound();
 
   return (
     <Fragment>
       <Box component="section">
-        {data?.results?.map((item) => (
+        {articles.results?.map((item: ArticleModel) => (
           <ArticleItem data={item} key={item._id} />
         ))}
       </Box>
-
-      <Box component="section">
+      <Box component="section" sx={{ mt: 4 }}>
         <Pagination
           routerUrl={`page`}
-          totalPages={data.totalPages}
+          totalPages={articles.totalPages}
           currentPage={currentPage}
         />
       </Box>
@@ -68,6 +78,7 @@ export async function generateStaticParams() {
     await ArticleService.getItems({
       page: 1,
       pageSize: PAGE_SIZE,
+      isShow: true,
     })
   )?.data as ListResponseModel<ArticleModel[]>;
 

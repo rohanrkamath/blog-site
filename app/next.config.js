@@ -55,7 +55,7 @@ const nextConfig = {
         pathname: '/uploads/**',
       },
     ],
-    domains: ['localhost'],
+    domains: ['localhost', 'images.unsplash.com'],
   },
 };
 

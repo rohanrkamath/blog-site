@@ -1,9 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsEnum, IsNumber, IsOptional } from 'class-validator'
+import { IsEnum, IsNumber, IsOptional, IsBoolean } from 'class-validator'
 import { OrderType } from '@/common/interfaces/enums'
 
 export class ListQueryDto {
+  @ApiProperty({
+    description: 'Filter by active/inactive status.',
+    required: false,
+    type: Boolean,
+  })
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isShow?: boolean;
+
   @ApiProperty({
     description: 'Is paging ?.',
     required: false,

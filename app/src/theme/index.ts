@@ -36,7 +36,7 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
             ...(mode === PaletteMode.LIGHT
               ? {
                   primary: {
-                    main: blue[700],
+                    main: blue[600],
                     contrastText: common.white,
                   },
                   secondary: {
@@ -54,7 +54,7 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
                 }
               : {
                   primary: {
-                    main: darkColor,
+                    main: blue[400],
                     contrastText: common.white,
                   },
                   secondary: {

@@ -4,6 +4,7 @@ import { Fragment } from "react";
 // ** next
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 // ** services
 import ArticleService from "@/services/ArticleService";
@@ -13,10 +14,12 @@ import CategoryService from "@/services/CategoryService";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 // ** components
 import ArticleItem from "@/components/article/Item";
-import Pagination from "@/components/Pagination";
+import ServerPagination from "@/components/ServerPagination";
 
 // ** models
 import ArticleModel from "@/models/ArticleModel";
@@ -43,6 +46,7 @@ export default async function BlogGuid({ params }: BlogCategoryGuidProps) {
       page: 1,
       pageSize: PAGE_SIZE,
       paging: 1,
+      isShow: true,
     })
   )?.data as ListResponseModel<ArticleModel[]>;
 
@@ -53,18 +57,42 @@ export default async function BlogGuid({ params }: BlogCategoryGuidProps) {
       <Paper
         elevation={1}
         component="header"
-        sx={{ padding: 1, paddingRight: 2, paddingLeft: 2, marginBottom: 3 }}
+        sx={{ 
+          padding: 1, 
+          paddingRight: 2, 
+          paddingLeft: 2, 
+          marginBottom: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
       >
-        <Typography
-          component="h1"
-          variant="subtitle1"
-          fontWeight="bold"
-        >{`Category: ${categoryData?.data?.title}`}</Typography>
-        {categoryData?.data?.description && (
-          <Typography component="p" variant="caption" color="gray">
-            {categoryData.data?.description}
-          </Typography>
-        )}
+        <Box>
+          <Typography
+            component="h1"
+            variant="subtitle1"
+            fontWeight="bold"
+          >{`Category: ${categoryData?.data?.title}`}</Typography>
+          {categoryData?.data?.description && (
+            <Typography component="p" variant="caption" color="gray">
+              {categoryData.data?.description}
+            </Typography>
+          )}
+        </Box>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <IconButton 
+            size="small"
+            aria-label="remove category filter"
+            sx={{ 
+              ml: 2,
+              '&:hover': {
+                backgroundColor: 'action.hover'
+              }
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Link>
       </Paper>
       <Box component="section">
         {data.results.map((item) => (
@@ -73,7 +101,7 @@ export default async function BlogGuid({ params }: BlogCategoryGuidProps) {
       </Box>
 
       <Box component="section">
-        <Pagination
+        <ServerPagination
           routerUrl={`category/${guid}/page`}
           totalPages={data.totalPages}
           currentPage={data.currentPage}

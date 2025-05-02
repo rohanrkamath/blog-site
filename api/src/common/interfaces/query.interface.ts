@@ -9,6 +9,7 @@ export interface IQuery {
   searchQuery: any
   pagination?: IPagination
   order: any
+  isShow?: boolean
 }
 
 export interface IListQueryResponse<T> {

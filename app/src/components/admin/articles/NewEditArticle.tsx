@@ -238,6 +238,31 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
     setFieldValue("content", text);
   };
 
+  const handleToggleChange = async (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    try {
+      console.log('Toggling article visibility:', { checked, values });
+      setFieldValue("isShow", checked);
+      if (values._id || id) {
+        const response = await ArticleService.patchItem({
+          ...values,
+          isShow: checked
+        });
+        console.log('Toggle response:', response);
+        enqueueSnackbar("Article visibility updated successfully.", {
+          variant: "success",
+        });
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_NAMES.ARTICLE],
+        });
+      }
+    } catch (err) {
+      console.error('Error toggling article:', err);
+      fetchErrorSnackbar(err as FetchError);
+      // Revert the toggle if save failed
+      setFieldValue("isShow", !checked);
+    }
+  };
+
   const loading =
     editArticleItem.isLoading || editArticleItem.isRefetching || isSubmitting;
 
@@ -358,9 +383,7 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
                         control={
                           <Switch
                             checked={values.isShow}
-                            onChange={(e, checked) =>
-                              setFieldValue("isShow", checked)
-                            }
+                            onChange={handleToggleChange}
                           />
                         }
                         label={values.isShow ? "Active" : "Inactive"}

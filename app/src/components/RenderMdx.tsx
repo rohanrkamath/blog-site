@@ -80,7 +80,7 @@ export default function RenderMdx({ content }: RenderMdxProps) {
   };
 
   return (
-    <div>
+    <div className="mdx-content">
       <MDXRemote
         source={content}
         options={{

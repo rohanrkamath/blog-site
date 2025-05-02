@@ -82,6 +82,16 @@ export default function AdminArticleIndex() {
         format(new Date(row.publishingDate), "PP - p", { locale: enUS }),
     },
     {
+      field: "isShow",
+      headerName: "Status",
+      width: 120,
+      renderCell: ({ row }: GridRenderCellParams<ArticleModel>) => (
+        <Typography color={row.isShow ? "success.main" : "error.main"}>
+          {row.isShow ? "Active" : "Inactive"}
+        </Typography>
+      ),
+    },
+    {
       field: "categories",
       headerName: "Categories",
       flex: 1,

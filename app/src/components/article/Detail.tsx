@@ -33,9 +33,12 @@ type ArticleDetailProps = {
 export default function ArticleDetail({ data }: ArticleDetailProps) {
   const readingTimeMin = Math.round(readingTime(data.content).minutes);
 
+  // Remove the H1 title from content since we're displaying it separately
+  const contentWithoutTitle = data.content.replace(/^#\s+.*$/m, '');
+
   return (
     <ArticleLayout
-      tableOfContents={<TableOfContents content={data.content} />}
+      tableOfContents={<TableOfContents content={contentWithoutTitle} />}
     >
       <Box component="article">
         <Grid
@@ -48,19 +51,48 @@ export default function ArticleDetail({ data }: ArticleDetailProps) {
           <Grid container item xs={12}>
             <Grid item xs={10}>
               <Typography
-                component="h2"
-                margin={0}
-                fontSize="2rem"
-                fontWeight="bold"
+                component="h1"
+                variant="h3"
+                sx={{
+                  fontSize: "2.5rem",
+                  fontWeight: 700,
+                  mb: 2,
+                  color: "text.primary"
+                }}
               >
                 {data.title}
               </Typography>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem />}
+                spacing={1}
+                sx={{
+                  "& span.MuiBox-root": {
+                    fontSize: "0.770rem",
+                    color: "grey.600",
+                  },
+                }}
+              >
+                <Box component="span">
+                  {formatDistanceToNow(new Date(data.publishingDate), {
+                    addSuffix: true,
+                    locale: enUS
+                  })}
+                </Box>
+                <Box component="span">
+                  {readingTimeMin <= 0
+                    ? "Less than 1 minute"
+                    : `${readingTimeMin} minute read`}
+                </Box>
+                <Box component="span">{`${data.viewCount} views`}</Box>
+                <Box component="span">{`${data.likedCount} likes`}</Box>
+              </Stack>
             </Grid>
             <Grid
               item
               xs={2}
               display="flex"
-              alignItems="center"
+              alignItems="flex-start"
               justifyContent="flex-end"
             >
               <LikeButton
@@ -71,36 +103,8 @@ export default function ArticleDetail({ data }: ArticleDetailProps) {
             </Grid>
           </Grid>
 
-          <Grid item>
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem />}
-              spacing={1}
-              sx={{
-                "& span.MuiBox-root": {
-                  fontSize: "0.770rem",
-                  color: "grey.600",
-                },
-              }}
-            >
-              <Box component="span">
-                {formatDistanceToNow(new Date(data.publishingDate), {
-                  addSuffix: true,
-                  locale: enUS
-                })}
-              </Box>
-              <Box component="span">
-                {readingTimeMin <= 0
-                  ? "Less than 1 minute"
-                  : `${readingTimeMin} minute read`}
-              </Box>
-              <Box component="span">{`${data.viewCount} views`}</Box>
-              <Box component="span">{`${data.likedCount} likes`}</Box>
-            </Stack>
-          </Grid>
-
           <Grid item xs={12} width="100%">
-            <RenderMdx content={data.content} />
+            <RenderMdx content={contentWithoutTitle} />
           </Grid>
 
           <Grid item xs={12}>
