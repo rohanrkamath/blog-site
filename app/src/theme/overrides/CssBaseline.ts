@@ -40,14 +40,14 @@ export default function CssBaseline(
           padding: 0,
           textTransform: "uppercase",
         },
-        ".editor-code": {
+        ".editor-code, pre, code": {
           backgroundColor:
             theme.palette.mode === "dark"
-              ? theme.palette.grey[900]
+              ? "#23272e"
               : theme.palette.grey[100],
           fontFamily: "Menlo, Consolas, Monaco, monospace",
           display: "block",
-          padding: "8px 8px 8px 52px",
+          padding: "12px",
           lineHeight: 1.53,
           fontSize: "13px",
           margin: 0,
@@ -56,42 +56,6 @@ export default function CssBaseline(
           tabSize: 2,
           overflowX: "auto",
           position: "relative",
-          "&:before": {
-            content: "attr(data-gutter)",
-            position: "absolute",
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? theme.palette.grey[800]
-                : theme.palette.grey[200],
-            left: 0,
-            top: 0,
-            borderRight: "1px solid",
-            borderRightColor:
-              theme.palette.mode === "dark"
-                ? theme.palette.grey[700]
-                : theme.palette.grey[300],
-            padding: "8px",
-            color:
-              theme.palette.mode === "dark"
-                ? theme.palette.common.white
-                : theme.palette.common.black,
-            whiteSpace: "pre-wrap",
-            textAlign: "right",
-            minWidth: "25px",
-          },
-          "&:after": {
-            content: "attr(data-highlight-language)",
-            top: 0,
-            right: "3px",
-            padding: "3px",
-            fontSize: "10px",
-            textTransform: "uppercase",
-            position: "absolute",
-            color:
-              theme.palette.mode === "dark"
-                ? theme.palette.grey[300]
-                : theme.palette.grey[700],
-          },
         },
         ".editor-quote": {
           margin: "0",

@@ -20,6 +20,7 @@ export default interface ArticleModel {
   readonly likedCount: number;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly nextArticle?: ArticleModel | string | null;
 }
 
 export type ArticleFormModel = {
@@ -33,6 +34,7 @@ export type ArticleFormModel = {
   readonly tags: string[];
   readonly coverImage: string | null;
   readonly isShow: boolean;
+  readonly nextArticle?: string | null;
 };
 
 export type ArticleListQueryModel = {

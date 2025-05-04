@@ -4,6 +4,7 @@ import { Fragment, ReactNode } from "react";
 // **  mui
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
 
 // ** models
 import { OrderType } from "@/models/enums";
@@ -23,6 +24,8 @@ import PageService from "@/services/PageService";
 
 // ** config
 import { NAVBAR_PAGE_IDS } from "@/config";
+
+const NAVBAR_HEIGHT = 64;
 
 export default async function Template({ children }: { children: ReactNode }) {
   const categories = (
@@ -49,7 +52,7 @@ export default async function Template({ children }: { children: ReactNode }) {
       <Navigation categories={categories} navbarPages={navbarPages} />
       <Box
         sx={{
-          minHeight: 'calc(100vh - 64px)', // Subtract header height
+          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           width: '100%'
@@ -60,7 +63,8 @@ export default async function Template({ children }: { children: ReactNode }) {
           component="main"
           maxWidth={false} 
           sx={{ 
-            py: 3,
+            pt: 2,
+            pb: 1,
             display: 'flex',
             flexDirection: 'column',
             flex: 1,

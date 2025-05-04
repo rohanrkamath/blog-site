@@ -61,13 +61,16 @@ export default function RenderMdx({ content }: RenderMdxProps) {
     img({ className, children, alt, src, ...props }) {
       if (!src) return <></>;
       return (
-        <Image
-          alt={alt ?? ""}
-          src={src}
-          width={500}
-          height={500}
-          style={{ height: "auto" }}
-        />
+        <span style={{ display: 'block', textAlign: 'center', padding: '24px 0' }}>
+          <Image
+            alt={alt ?? ""}
+            src={src}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "100%", height: "auto", maxWidth: "700px", display: "inline-block" }}
+          />
+        </span>
       );
     },
     code({ className, children, ...props }) {

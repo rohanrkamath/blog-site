@@ -17,4 +17,5 @@ export interface IArticle extends Document {
   readonly likedIPs?: string[]
   readonly viewCount: number
   readonly likedCount: number
+  readonly nextArticle?: ObjectId | PopulatedDoc<IArticle>
 }

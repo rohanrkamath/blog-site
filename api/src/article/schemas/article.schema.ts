@@ -55,6 +55,14 @@ export class Article {
 
   // Virtual;
   likedCount: number
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Article',
+    required: false,
+    default: null,
+  })
+  nextArticle?: ObjectId;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article)

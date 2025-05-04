@@ -58,9 +58,8 @@ export class ArticleDto {
   @ApiProperty({
     description: 'Tags',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
-  @ArrayMinSize(1)
   tags: string[]
 
   @ApiProperty({
@@ -77,4 +76,13 @@ export class ArticleDto {
   @IsNotEmpty()
   @IsBoolean()
   isShow: boolean
+
+  @ApiProperty({
+    description: 'Next article id',
+    required: false,
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  nextArticle?: string;
 }

@@ -12,9 +12,13 @@ import Collapse from "@mui/material/Collapse";
 
 const TableOfContentsWrapper = styled(Box)(({ theme }) => ({
   position: 'sticky',
-  top: theme.spacing(2),
-  maxHeight: 'calc(100vh - 100px)',
+  top: '64px',
+  maxHeight: 'calc(100vh - 96px)',
   overflowY: 'auto',
+  paddingLeft: theme.spacing(2),
+  borderLeft: `2px solid ${theme.palette.divider}`,
+  zIndex: 1,
+  marginTop: theme.spacing(6),
   '&::-webkit-scrollbar': {
     width: '4px',
   },
@@ -25,6 +29,16 @@ const TableOfContentsWrapper = styled(Box)(({ theme }) => ({
     background: theme.palette.divider,
     borderRadius: '4px',
   },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: '2px',
+    background: theme.palette.primary.main,
+    opacity: 0.3,
+  }
 }));
 
 interface Heading {
@@ -117,11 +131,9 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
       const headingElements = Array.from(mdxContent.querySelectorAll('h2, h3'));
       let currentActiveId = "";
       
-      // Find the first heading that's above the viewport middle
       for (const element of headingElements) {
         const rect = element.getBoundingClientRect();
-        // Adjust threshold to be closer to the top of the viewport
-        if (rect.top <= 100) { // Changed from window.innerHeight / 3
+        if (rect.top - 80 <= 0) {
           currentActiveId = element.id;
         } else {
           break;
@@ -181,9 +193,11 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             underline="none"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById(heading.id)?.scrollIntoView({
-                behavior: 'smooth'
-              });
+              const el = document.getElementById(heading.id);
+              if (el) {
+                const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
             }}
             sx={{
               display: 'block',
@@ -191,7 +205,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
               py: 1,
               color: isActive ? 'primary.main' : 'text.primary',
               fontWeight: isActive ? 500 : 400,
-              fontSize: '0.95rem',
+              fontSize: '0.85rem',
               transition: 'all 0.2s ease',
               '&:hover': {
                 color: 'primary.main',
@@ -227,9 +241,11 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                       underline="none"
                       onClick={(e) => {
                         e.preventDefault();
-                        document.getElementById(child.id)?.scrollIntoView({
-                          behavior: 'smooth'
-                        });
+                        const el = document.getElementById(child.id);
+                        if (el) {
+                          const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                          window.scrollTo({ top: y, behavior: 'smooth' });
+                        }
                       }}
                       sx={{
                         display: 'block',
@@ -237,7 +253,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                         py: 1,
                         color: child.id === activeId ? 'primary.main' : 'text.secondary',
                         fontWeight: child.id === activeId ? 500 : 400,
-                        fontSize: '0.9rem',
+                        fontSize: '0.8rem',
                         transition: 'all 0.2s ease',
                         '&:hover': {
                           color: 'primary.main',
@@ -273,9 +289,11 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                               underline="none"
                               onClick={(e) => {
                                 e.preventDefault();
-                                document.getElementById(h4Child.id)?.scrollIntoView({
-                                  behavior: 'smooth'
-                                });
+                                const el = document.getElementById(h4Child.id);
+                                if (el) {
+                                  const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                                  window.scrollTo({ top: y, behavior: 'smooth' });
+                                }
                               }}
                               sx={{
                                 display: 'block',
@@ -283,7 +301,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                                 py: 1,
                                 color: h4Child.id === activeId ? 'primary.main' : 'text.secondary',
                                 fontWeight: h4Child.id === activeId ? 500 : 400,
-                                fontSize: '0.85rem',
+                                fontSize: '0.75rem',
                                 transition: 'all 0.2s ease',
                                 '&:hover': {
                                   color: 'primary.main',
@@ -316,7 +334,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
         sx={{ 
           fontWeight: 700, 
           mb: 3,
-          fontSize: '1.1rem',
+          fontSize: '0.95rem',
           textTransform: 'uppercase',
           letterSpacing: '0.5px'
         }}

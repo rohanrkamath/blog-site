@@ -27,7 +27,7 @@ export default function ArticleLayout({ children, tableOfContents }: ArticleLayo
       <Box sx={{ 
         display: { xs: 'none', md: 'block' },
         position: 'sticky',
-        top: theme => theme.spacing(2),
+        top: '64px',
         alignSelf: 'start',
         paddingLeft: theme => theme.spacing(2)
       }}>

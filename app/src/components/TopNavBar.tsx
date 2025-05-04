@@ -17,16 +17,18 @@ export default function TopNavBar() {
 
   return (
     <AppBar 
-      position="static" 
+      position="sticky" 
       color="transparent" 
       elevation={0}
       sx={{ 
         borderBottom: '1px solid',
         borderColor: 'divider',
-        mb: 2
+        backdropFilter: 'blur(8px)',
+        backgroundColor: 'background.default',
+        minHeight: '56px',
       }}
     >
-      <Toolbar>
+      <Toolbar sx={{ minHeight: '48px !important', height: '48px !important' }}>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           {navigationItems.map((item) => (

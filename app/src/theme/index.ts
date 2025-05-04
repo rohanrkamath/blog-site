@@ -18,7 +18,8 @@ import { PaletteMode } from "@/models/enums";
 import componentsOverride from "@/theme/overrides";
 
 const Theme = (deviceType: string, mode: PaletteMode) => {
-  const darkColor = "#202020";
+  const darkColor = "#1E1E1E";
+  const sidebarColor = "#1A1A1A";
 
   // const ssrMatchMedia = (query: string) => ({
   //   matches: mediaQuery.match(query, {
@@ -31,6 +32,34 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
     () =>
       createTheme(
         {
+          typography: {
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+            h1: {
+              fontSize: '1.5rem',
+              fontWeight: 600,
+              letterSpacing: '-0.022em',
+            },
+            h2: {
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              letterSpacing: '-0.021em',
+            },
+            h3: {
+              fontSize: '1rem',
+              fontWeight: 500,
+              letterSpacing: '-0.02em',
+            },
+            body1: {
+              fontSize: '0.85rem',
+              lineHeight: 1.5,
+              letterSpacing: '-0.011em',
+            },
+            body2: {
+              fontSize: '0.75rem',
+              lineHeight: 1.5,
+              letterSpacing: '-0.01em',
+            },
+          },
           palette: {
             mode,
             ...(mode === PaletteMode.LIGHT
@@ -62,12 +91,12 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
                     contrastText: grey[600],
                   },
                   background: {
-                    default: darkColor,
-                    paper: grey[900],
+                    default: "#282c34",
+                    paper: "#32363f",
                   },
                   text: {
-                    primary: common.white,
-                    secondary: grey[400],
+                    primary: "#FFFFFF",
+                    secondary: "#9E9E9E",
                   },
                 }),
           },
@@ -75,7 +104,7 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
             MuiTypography: {
               styleOverrides: {
                 caption: {
-                  color: mode === PaletteMode.LIGHT ? grey[900] : common.white,
+                  color: mode === PaletteMode.LIGHT ? grey[900] : "#9E9E9E",
                 },
               },
             },

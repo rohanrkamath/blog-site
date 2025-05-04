@@ -1,10 +1,12 @@
 // ** next
 import { default as NextLink } from "next/link";
+import Link from "next/link";
 
 // ** third party
 import { formatDistanceToNow } from "date-fns";
 import { enUS } from "date-fns/locale";
 import readingTime from "reading-time";
+import { useEffect, useState } from "react";
 
 // ** mui
 import Box from "@mui/material/Box";
@@ -18,23 +20,35 @@ import Chip from "@mui/material/Chip";
 import ArticleModel from "@/models/ArticleModel";
 
 // ** components
-import LikeButton from "@/components/article/LikeButton";
 import RenderMdx from "@/components/RenderMdx";
 import TableOfContents from "@/components/article/TableOfContents";
 import ArticleLayout from "@/components/article/ArticleLayout";
+import NextRecommendedRead from "@/components/article/NextRecommendedRead";
 
 // ** utils
 import generateFileUrl from "@/utils/GenerateFileUrl";
+import ArticleService from "@/services/ArticleService";
 
 type ArticleDetailProps = {
   data: ArticleModel;
 };
 
-export default function ArticleDetail({ data }: ArticleDetailProps) {
+export default async function ArticleDetail({ data }: ArticleDetailProps) {
   const readingTimeMin = Math.round(readingTime(data.content).minutes);
 
   // Remove the H1 title from content since we're displaying it separately
   const contentWithoutTitle = data.content.replace(/^#\s+.*$/m, '');
+
+  // Server-side fetch for next article
+  let nextArticleData = null;
+  if (data.nextArticle) {
+    if (typeof data.nextArticle === "object") {
+      nextArticleData = data.nextArticle;
+    } else {
+      const res = await ArticleService.getItemById(data.nextArticle);
+      nextArticleData = res?.data ?? null;
+    }
+  }
 
   return (
     <ArticleLayout
@@ -49,7 +63,7 @@ export default function ArticleDetail({ data }: ArticleDetailProps) {
           spacing={2}
         >
           <Grid container item xs={12}>
-            <Grid item xs={10}>
+            <Grid item xs={12}>
               <Typography
                 component="h1"
                 variant="h3"
@@ -85,21 +99,7 @@ export default function ArticleDetail({ data }: ArticleDetailProps) {
                     : `${readingTimeMin} minute read`}
                 </Box>
                 <Box component="span">{`${data.viewCount} views`}</Box>
-                <Box component="span">{`${data.likedCount} likes`}</Box>
               </Stack>
-            </Grid>
-            <Grid
-              item
-              xs={2}
-              display="flex"
-              alignItems="flex-start"
-              justifyContent="flex-end"
-            >
-              <LikeButton
-                itemId={data._id}
-                likedCount={data.likedCount}
-                currentIpAdressIsLiked={true}
-              />
             </Grid>
           </Grid>
 
@@ -121,6 +121,9 @@ export default function ArticleDetail({ data }: ArticleDetailProps) {
                 />
               ))}
             </Stack>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+              <NextRecommendedRead nextArticle={nextArticleData} />
+            </Box>
           </Grid>
         </Grid>
       </Box>

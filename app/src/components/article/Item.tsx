@@ -43,14 +43,14 @@ function ArticleItem({ data }: ArticleItemProps) {
   }
 
   return (
-    <Box padding={1} marginBottom={3}>
+    <Box padding={0.5} marginBottom={1.5}>
       <Grid
         container
         direction="row"
         justifyContent="space-between"
         alignItems="flex-start"
         alignContent="end"
-        spacing={1}
+        spacing={0.5}
       >
         <Grid item>
           {coverImage && (
@@ -59,7 +59,7 @@ function ArticleItem({ data }: ArticleItemProps) {
         </Grid>
 
         <Grid item xs={12} sm>
-          <Box component="h3" fontSize="1.275rem" margin={0}>
+          <Box component="h3" fontSize="1rem" margin={0}>
             <StyledLink href={`/${data.guid}`}>
               {data.title}
             </StyledLink>
@@ -87,10 +87,9 @@ function ArticleItem({ data }: ArticleItemProps) {
                 : `${readingTimeMin} minute read`}
             </Box>
             <Box component="span">{`${data.viewCount} views`}</Box>
-            <Box component="span">{`${data.likedCount} likes`}</Box>
           </Stack>
 
-          <Box component="p" fontSize="0.770rem" margin="5px 0px">
+          <Box component="p" fontSize="0.75rem" margin="2px 0px">
             {data.shortDescription}
           </Box>
         </Grid>

@@ -34,6 +34,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import CircularProgress from "@mui/material/CircularProgress";
 import Tooltip from "@mui/material/Tooltip";
 import FormHelperText from "@mui/material/FormHelperText";
+import Autocomplete from "@mui/material/Autocomplete";
+import Typography from "@mui/material/Typography";
 
 // ** icons
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
@@ -43,6 +45,7 @@ import DoneIcon from "@mui/icons-material/Done";
 // ** models
 import FileModel from "@/models/FileModel";
 import { ArticleFormModel } from "@/models/ArticleModel";
+import ArticleModel from "@/models/ArticleModel";
 
 // ** utils
 import generateFileUrl from "@/utils/GenerateFileUrl";
@@ -126,6 +129,11 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
     enabled: !id ? false : true,
   });
 
+  const [nextArticleOptions, setNextArticleOptions] = useState<ArticleModel[]>([]);
+  const [nextArticleInput, setNextArticleInput] = useState("");
+  const [nextArticleLoading, setNextArticleLoading] = useState(false);
+  const [nextArticleValue, setNextArticleValue] = useState<ArticleModel | null>(null);
+
   // form validate
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Required field"),
@@ -134,7 +142,7 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
     guid: Yup.string().required("Required field"),
     publishingDate: Yup.date().required("Required field"),
     categories: Yup.array().min(1, "Required field").required("Required field"),
-    tags: Yup.array().min(1, "Required field").required("Required field"),
+    tags: Yup.array(),
   });
 
   const handleSelectCoverImage = () => setImageBrowserOpen(true);
@@ -193,10 +201,17 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
     const tags = data?.tags.map((t) => t.title) ?? [];
 
     const form: ArticleFormModel = {
-      ...data,
+      _id: data._id || null,
+      title: data.title || "",
+      shortDescription: data.shortDescription || "",
+      content: data.content || "",
+      guid: data.guid || "",
+      publishingDate: data.publishingDate ? new Date(data.publishingDate) : new Date(),
       categories,
       tags,
       coverImage: data?.coverImage?._id || null,
+      isShow: typeof data.isShow === 'boolean' ? data.isShow : true,
+      nextArticle: typeof data.nextArticle === 'object' && data.nextArticle !== null ? data.nextArticle._id : data.nextArticle || null,
     };
     if (data?.coverImage) setSelectCoverImage(data.coverImage);
     setCategoryTreeExpanded(categories);
@@ -230,6 +245,34 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
 
     return () => clearTimeout(delayDebounceFn);
   }, [values.guid]);
+
+  useEffect(() => {
+    let active = true;
+    // Always fetch articles, even if input is empty
+    setNextArticleLoading(true);
+    ArticleService.getItems({ s: nextArticleInput, sType: "title", page: 1, pageSize: 10, isShow: true }).then((res) => {
+      console.log("API response for next article:", res);
+      let articles = Array.isArray(res?.data)
+        ? res.data
+        : res?.data?.results || [];
+      console.log("Extracted articles:", articles);
+      // Exclude current article
+      articles = articles.filter((a) => a._id !== values._id);
+      setNextArticleOptions(articles);
+      setNextArticleLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [nextArticleInput, values._id]);
+
+  useEffect(() => {
+    if (values.nextArticle && !nextArticleValue) {
+      ArticleService.getItemById(values.nextArticle).then((res) => {
+        if (res?.data) setNextArticleValue(res.data);
+      });
+    }
+  }, [values.nextArticle]);
 
   const handleSelectImageChange = (data: FileModel[]) =>
     setSelectCoverImage(data[data.length - 1]);
@@ -375,6 +418,50 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
                     slotProps={{
                       textField: { size: "small", fullWidth: true },
                     }}
+                  />
+
+                  <Autocomplete
+                    id="next-article"
+                    options={nextArticleOptions}
+                    getOptionLabel={(option) => option.title || ""}
+                    filterOptions={(x) => x}
+                    loading={nextArticleLoading}
+                    value={nextArticleValue}
+                    onChange={(_e, newValue) => {
+                      setNextArticleValue(newValue);
+                      setFieldValue("nextArticle", newValue ? newValue._id : null);
+                    }}
+                    inputValue={nextArticleInput}
+                    onInputChange={(_e, newInputValue) => setNextArticleInput(newInputValue)}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    noOptionsText="No options"
+                    componentsProps={{
+                      popupIndicator: { title: "Open" },
+                      clearIndicator: { title: "Clear" },
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Next Article"
+                        size="small"
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {nextArticleLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>
+                        <Typography variant="body2">{option.title}</Typography>
+                      </li>
+                    )}
                   />
 
                   <Box display="flex" justifyContent="flex-end">

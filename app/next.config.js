@@ -57,6 +57,14 @@ const nextConfig = {
     ],
     domains: ['localhost', 'images.unsplash.com'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/article/:path*',
+        destination: 'http://localhost:4000/article/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
