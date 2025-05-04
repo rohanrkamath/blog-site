@@ -58,7 +58,7 @@ export default function RenderMdx({ content }: RenderMdxProps) {
     td({ className, children }) {
       return <StyledTableCell>{children}</StyledTableCell>;
     },
-    img({ className, children, alt, src, ...props }) {
+    img({ alt, src, title }) {
       if (!src) return <></>;
       return (
         <span style={{ display: 'block', textAlign: 'center', padding: '24px 0' }}>
@@ -70,6 +70,11 @@ export default function RenderMdx({ content }: RenderMdxProps) {
             sizes="100vw"
             style={{ width: "100%", height: "auto", maxWidth: "700px", display: "inline-block" }}
           />
+          {title && (
+            <span style={{ display: 'block', fontSize: '0.95em', color: '#888', marginTop: 8 }}>
+              {title}
+            </span>
+          )}
         </span>
       );
     },
