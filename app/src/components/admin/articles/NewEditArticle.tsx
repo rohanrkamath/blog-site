@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 // ** next
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 // ** third party
 import { useQueryClient } from "@tanstack/react-query";
@@ -65,6 +66,8 @@ import DialogFileBrowser from "@/components/admin/shared/file-browser/DialogFile
 import TagChipAutocomplete from "@/components/admin/articles/TagChipAutocomplete";
 import CategoryTree from "@/components/admin/shared/CategoryTree";
 import SkeletonLoading from "@/components/admin/shared/SkeletonLoading";
+import TableOfContents from '@/components/article/TableOfContents';
+const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), { ssr: false });
 
 // ** config
 import { QUERY_NAMES } from "@/config";
@@ -389,11 +392,15 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
             </FormControl>
 
             <Editor value={values.content} setValue={handleChangeSetContent} />
+            <div className="mdx-content">
+              <MarkdownPreview source={values.content} />
+            </div>
           </Stack>
         </Grid>
 
         <Grid item xs={3}>
           <Stack spacing={2}>
+            <TableOfContents content={values.content} />
             <Card>
               <StyledCardHeader
                 title="Settings"
@@ -419,64 +426,31 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
                       textField: { size: "small", fullWidth: true },
                     }}
                   />
-
                   <Autocomplete
                     id="next-article"
                     options={nextArticleOptions}
                     getOptionLabel={(option) => option.title || ""}
-                    filterOptions={(x) => x}
-                    loading={nextArticleLoading}
                     value={nextArticleValue}
-                    onChange={(_e, newValue) => {
-                      setNextArticleValue(newValue);
-                      setFieldValue("nextArticle", newValue ? newValue._id : null);
-                    }}
-                    inputValue={nextArticleInput}
-                    onInputChange={(_e, newInputValue) => setNextArticleInput(newInputValue)}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    noOptionsText="No options"
-                    componentsProps={{
-                      popupIndicator: { title: "Open" },
-                      clearIndicator: { title: "Clear" },
-                    }}
+                    loading={nextArticleLoading}
+                    onInputChange={(_, value) => setNextArticleInput(value)}
+                    onChange={(_, value) => setFieldValue("nextArticle", value?._id || "")}
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Next Article"
-                        size="small"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {nextArticleLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        <Typography variant="body2">{option.title}</Typography>
-                      </li>
+                      <TextField {...params} label="Next Article" size="small" />
                     )}
                   />
-
-                  <Box display="flex" justifyContent="flex-end">
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={values.isShow}
-                            onChange={handleToggleChange}
-                          />
-                        }
-                        label={values.isShow ? "Active" : "Inactive"}
-                      />
-                    </FormGroup>
-                  </Box>
+                  <CategoryTree
+                    value={values.categories}
+                    onChange={(categories) => setFieldValue("categories", categories)}
+                  />
+                  <TagChipAutocomplete
+                    value={values.tags}
+                    onChange={(tags) => setFieldValue("tags", tags)}
+                  />
+                  <Switch
+                    checked={values.isShow}
+                    onChange={handleToggleChange}
+                    color="primary"
+                  />
                 </Stack>
               </CardContent>
             </Card>
@@ -495,27 +469,6 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
                     />
                   )}
                 </CoverImageBox>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <StyledCardHeader title="Tags" />
-              <CardContent>
-                <TagChipAutocomplete
-                  selected={values.tags}
-                  setSelected={(data) => setFieldValue("tags", data)}
-                />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <StyledCardHeader title="Categories" />
-              <CardContent>
-                <CategoryTree
-                  expanded={categoryTreeExpanded}
-                  selected={values.categories}
-                  setSelected={(data) => setFieldValue("categories", data)}
-                />
               </CardContent>
             </Card>
           </Stack>

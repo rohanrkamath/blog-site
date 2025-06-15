@@ -2,10 +2,12 @@
 
 // ** next
 import dynamic from "next/dynamic";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import Box from "@mui/material/Box";
 
 // ** mui
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 
@@ -28,19 +30,6 @@ import SplitscreenIcon from "@mui/icons-material/Splitscreen";
 
 // ** third party
 import * as commands from "@uiw/react-md-editor/commands";
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
-
-// ** editor commands
-import TitlesCommandComponent, {
-  titlesCommand,
-} from "@/components/admin/shared/editor/commands/TitlesCommand";
-import ImageCommandComponent, {
-  imageCommand,
-} from "@/components/admin/shared/editor/commands/ImageCommand";
-import EmojiPickerComponent, {
-  emojiPickerCommand,
-} from "@/components/admin/shared/editor/commands/EmojiPickerCommand";
-import underlineCommand from "@/components/admin/shared/editor/commands/UnderlineCommand";
 
 const Icon = ({ name, ...props }: { name?: string } & SvgIconProps) => {
   switch (name) {
@@ -110,7 +99,24 @@ const EditorWrapperBox = styled(Box)(({ theme }) => ({
         theme.palette.grey[theme.palette.mode === "dark" ? 800 : 400],
     },
   },
+  "& textarea.w-md-editor-text-input, & .wmde-markdown": {
+    lineHeight: 1.5,
+    fontSize: 18,
+    fontFamily: theme.typography.fontFamily,
+    boxSizing: "border-box",
+    padding: 0,
+  },
+  "& textarea.w-md-editor-text-input": {
+    lineHeight: 1.5,
+    fontSize: 20,
+    fontFamily: theme.typography.fontFamily,
+    boxSizing: "border-box",
+    padding: 0,
+  },
 }));
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), { ssr: false });
 
 type EditorProps = {
   value: string;
@@ -119,70 +125,6 @@ type EditorProps = {
 
 export default function Editor({ value, setValue }: EditorProps) {
   return (
-    <EditorWrapperBox>
-      <MDEditor
-        value={value}
-        onChange={(value) => setValue(value || "")}
-        height={800}
-        components={{
-          toolbar: (command, disabled, executeCommand, index) => {
-            const props = { command, disabled, index };
-            switch (command.name) {
-              case "titles":
-                return (
-                  <TitlesCommandComponent
-                    {...props}
-                    executeCommand={executeCommand}
-                  />
-                );
-              case "image":
-                return (
-                  <ImageCommandComponent
-                    {...props}
-                    executeCommand={executeCommand}
-                  />
-                );
-              case "emojiPicker":
-                return (
-                  <EmojiPickerComponent
-                    {...props}
-                    executeCommand={executeCommand}
-                  />
-                );
-              default:
-                return (
-                  <IconButton
-                    size="small"
-                    onClick={() => executeCommand(command)}
-                    tabIndex={index}
-                    {...props}
-                  >
-                    <Icon fontSize="small" name={command.name} />
-                  </IconButton>
-                );
-            }
-          },
-        }}
-        commands={[
-          titlesCommand,
-          commands.bold,
-          commands.italic,
-          commands.strikethrough,
-          underlineCommand,
-          commands.hr,
-          commands.divider,
-          commands.link,
-          commands.quote,
-          commands.code,
-          commands.codeBlock,
-          imageCommand,
-          commands.divider,
-          commands.orderedListCommand,
-          commands.unorderedListCommand,
-          commands.checkedListCommand,
-          emojiPickerCommand,
-        ]}
-      />
-    </EditorWrapperBox>
+    <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
   );
 }

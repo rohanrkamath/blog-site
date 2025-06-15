@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import dynamic from "next/dynamic";
 
 // ** mui
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -56,6 +57,8 @@ import useFetchErrorSnackbar from "@/hooks/useFetchErrorSnackbar";
 // ** components
 import Editor from "@/components/admin/shared/editor";
 import SkeletonLoading from "@/components/admin/shared/SkeletonLoading";
+import TableOfContents from '@/components/article/TableOfContents';
+const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), { ssr: false });
 
 // ** config
 import { QUERY_NAMES } from "@/config";
@@ -271,11 +274,15 @@ export default function NewEditPage({ id: editId }: NewEditPageProps) {
             </FormControl>
 
             <Editor value={values.content} setValue={handleChangeSetContent} />
+            <div className="mdx-content">
+              <MarkdownPreview source={values.content} />
+            </div>
           </Stack>
         </Grid>
 
         <Grid item xs={3}>
           <Stack spacing={2}>
+            <TableOfContents content={values.content} />
             <Card>
               <StyledCardHeader
                 title="Settings"
@@ -301,16 +308,13 @@ export default function NewEditPage({ id: editId }: NewEditPageProps) {
                       textField: { size: "small", fullWidth: true },
                     }}
                   />
-
                   <Box display="flex" justifyContent="flex-end">
                     <FormGroup>
                       <FormControlLabel
                         control={
                           <Switch
                             checked={values.isShow}
-                            onChange={(e, checked) =>
-                              setFieldValue("isShow", checked)
-                            }
+                            onChange={(e, checked) => setFieldValue("isShow", checked)}
                           />
                         }
                         label={values.isShow ? "Active" : "Inactive"}
