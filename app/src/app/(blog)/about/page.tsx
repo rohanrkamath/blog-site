@@ -13,14 +13,14 @@ export default function AboutPage() {
             About Me
           </Typography>
           <Typography paragraph>
-            Hi, I'm Rohan Kamath, a passionate software engineer with a love for building innovative solutions and sharing knowledge with the developer community.
+            Hi, I&apos;m Rohan Kamath, a passionate software engineer with a love for building innovative solutions and sharing knowledge with the developer community.
           </Typography>
 
           <Typography id="journey" variant="h5" gutterBottom sx={{ mt: 4 }}>
             My Journey
           </Typography>
           <Typography paragraph>
-            I've been fascinated by technology since my early years, which led me to pursue a career in software engineering. Throughout my journey, I've worked with various technologies and frameworks, always striving to learn and grow.
+            I&apos;ve been fascinated by technology since my early years, which led me to pursue a career in software engineering. Throughout my journey, I&apos;ve worked with various technologies and frameworks, always striving to learn and grow.
           </Typography>
 
           <Typography id="what-i-do" variant="h5" gutterBottom sx={{ mt: 4 }}>
@@ -52,7 +52,7 @@ export default function AboutPage() {
             Interests & Hobbies
           </Typography>
           <Typography paragraph>
-            Beyond coding, I'm passionate about:
+            Beyond coding, I&apos;m passionate about:
           </Typography>
           <Box component="ul" sx={{ pl: 2 }}>
             <Typography component="li">📚 Reading tech blogs and books</Typography>
@@ -62,10 +62,10 @@ export default function AboutPage() {
           </Box>
 
           <Typography id="connect" variant="h5" gutterBottom sx={{ mt: 4 }}>
-            Let's Connect
+            Let&apos;s Connect
           </Typography>
           <Typography paragraph>
-            I'm always interested in connecting with fellow developers and tech enthusiasts. Feel free to reach out through any of my social media channels or drop me an email.
+            I&apos;m always interested in connecting with fellow developers and tech enthusiasts. Feel free to reach out through any of my social media channels or drop me an email.
           </Typography>
         </Paper>
       </Grid>
