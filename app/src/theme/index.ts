@@ -50,12 +50,12 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
               letterSpacing: '-0.02em',
             },
             body1: {
-              fontSize: '0.85rem',
+              fontSize: '0.95rem',
               lineHeight: 1.5,
               letterSpacing: '-0.011em',
             },
             body2: {
-              fontSize: '0.75rem',
+              fontSize: '0.85rem',
               lineHeight: 1.5,
               letterSpacing: '-0.01em',
             },
@@ -91,8 +91,8 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
                     contrastText: grey[600],
                   },
                   background: {
-                    default: "#282c34",
-                    paper: "#32363f",
+                    default: "#0a0a0a",
+                    paper: "#1a1a1a",
                   },
                   text: {
                     primary: "#FFFFFF",

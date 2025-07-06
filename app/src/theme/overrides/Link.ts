@@ -1,6 +1,7 @@
 "use client";
 
 import { Components, Theme } from "@mui/material/styles";
+import { blue } from "@mui/material/colors";
 
 export default function Link(
   theme: Theme
@@ -9,7 +10,7 @@ export default function Link(
     MuiLink: {
       styleOverrides: {
         root: {
-          color: theme.palette.secondary.main,
+          color: blue[600],
         },
       },
     },

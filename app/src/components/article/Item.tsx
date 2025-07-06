@@ -43,14 +43,14 @@ function ArticleItem({ data }: ArticleItemProps) {
   }
 
   return (
-    <Box padding={0.5} marginBottom={1.5}>
+    <Box padding={2} marginBottom={3}>
       <Grid
         container
         direction="row"
         justifyContent="space-between"
         alignItems="flex-start"
         alignContent="end"
-        spacing={0.5}
+        spacing={1.5}
       >
         <Grid item>
           {coverImage && (
@@ -59,7 +59,7 @@ function ArticleItem({ data }: ArticleItemProps) {
         </Grid>
 
         <Grid item xs={12} sm>
-          <Box component="h3" fontSize="1rem" margin={0}>
+          <Box component="h3" fontSize="1.2rem" margin={0}>
             <StyledLink href={`/${data.guid}`}>
               {data.title}
             </StyledLink>
@@ -70,7 +70,7 @@ function ArticleItem({ data }: ArticleItemProps) {
             spacing={1}
             sx={{
               "& span.MuiBox-root": {
-                fontSize: "0.770rem",
+                fontSize: "0.85rem",
                 color: "grey.600",
               },
             }}
@@ -89,7 +89,7 @@ function ArticleItem({ data }: ArticleItemProps) {
             <Box component="span">{`${data.viewCount} views`}</Box>
           </Stack>
 
-          <Box component="p" fontSize="0.75rem" margin="2px 0px">
+          <Box component="p" fontSize="0.9rem" margin="6px 0px">
             {data.shortDescription}
           </Box>
         </Grid>

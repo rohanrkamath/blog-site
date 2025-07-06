@@ -63,14 +63,8 @@ export class UserController {
     type: DefaultException,
   })
   @Post('register')
-  async create(@Body() body: UserDto) {
-    // #######################################
-    // Disable here after initial installation;
-    const userCheck = await this.service.findUser(body.userName, body.email)
-    if (userCheck) throw new BadRequestException(this.userMessage.EXISTING_USER)
-    body.password = await this.passwordHelper.passwordHash(body.password)
-    await this.service.register(body)
-    // #######################################
+  async create() {
+    throw new BadRequestException('Registration is disabled.');
   }
 
   @ApiOperation({

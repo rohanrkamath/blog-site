@@ -441,16 +441,16 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
                   <CategoryTree
                     value={values.categories}
                     onChange={(categories) => setFieldValue("categories", categories)}
-                  />
+                      />
                   <TagChipAutocomplete
                     value={values.tags}
                     onChange={(tags) => setFieldValue("tags", tags)}
                   />
-                  <Switch
-                    checked={values.isShow}
-                    onChange={handleToggleChange}
+                          <Switch
+                            checked={values.isShow}
+                            onChange={handleToggleChange}
                     color="primary"
-                  />
+                      />
                 </Stack>
               </CardContent>
             </Card>

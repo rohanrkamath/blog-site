@@ -138,9 +138,8 @@ export default function NavigationContent({
           component="p" 
           sx={{ 
             textAlign: 'center',
-            fontSize: '1.1rem',
+            fontSize: '1rem',
             fontWeight: 500,
-            fontFamily: 'serif',
             letterSpacing: '0.02em',
             lineHeight: 1.4,
             mt: 2,
