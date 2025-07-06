@@ -113,10 +113,15 @@ export default function TitlesCommandComponent({
           {commandItems.map((commandItem, commandItemIndex) => (
             <ListItem key={commandItemIndex} disablePadding>
               <ListItemButton
-                onClick={() => handleClickCommand(commandItem.command)}
+                onClick={() => {
+                  const cmd = commands[commandItem.name as keyof typeof commands];
+                  if (typeof cmd === "object" && cmd !== null && "execute" in cmd) {
+                    handleClickCommand(cmd as ICommand);
+                  }
+                }}
               >
                 <ListItemIcon sx={{ minWidth: 40 }}>
-                  <TextFieldsIcon sx={{ fontSize: commandItem.fontSize }} />
+                  <TextFieldsIcon />
                 </ListItemIcon>
                 <ListItemText primary={commandItem.title} />
               </ListItemButton>
