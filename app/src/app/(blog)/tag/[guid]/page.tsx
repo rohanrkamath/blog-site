@@ -44,6 +44,7 @@ export default async function BlogTagGuid({ params }: BlogTagGuidProps) {
         page: 1,
         pageSize: PAGE_SIZE,
         paging: 1,
+        isShow: true,
       })
     )?.data as ListResponseModel<ArticleModel[]>;
 

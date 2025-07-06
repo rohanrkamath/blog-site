@@ -10,7 +10,7 @@ export default function Link(
     MuiLink: {
       styleOverrides: {
         root: {
-          color: blue[600],
+          color: theme.palette.mode === 'dark' ? blue[400] : blue[500],
         },
       },
     },

@@ -185,7 +185,7 @@ export default function NavigationContent({
         </SocialMedia>
       </ProfileSection>
 
-      <Box padding={1} mb={2} mt={1}>
+      <Box padding={1} mb={1} mt={1}>
         <SearchInput size="small" fullWidth />
       </Box>
 
@@ -204,8 +204,6 @@ export default function NavigationContent({
               </ListItemButton>
             ))}
           </List>
-
-          <Divider />
         </Fragment>
       )}
       {categories.length > 0 && (

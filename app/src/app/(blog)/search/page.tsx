@@ -47,6 +47,7 @@ export default async function BlogSearch({ searchParams }: BlogSearchProps) {
       pageSize: PAGE_SIZE,
       sType: "title,shortDescription,content",
       s: s as string,
+      isShow: true,
     });
     
     if (response?.data) {
