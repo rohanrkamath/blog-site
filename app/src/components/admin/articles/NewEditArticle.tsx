@@ -439,12 +439,13 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
                     )}
                   />
                   <CategoryTree
-                    value={values.categories}
-                    onChange={(categories) => setFieldValue("categories", categories)}
-                      />
+                    selected={values.categories}
+                    setSelected={(categories) => setFieldValue("categories", categories)}
+                    expanded={categoryTreeExpanded}
+                  />
                   <TagChipAutocomplete
-                    value={values.tags}
-                    onChange={(tags) => setFieldValue("tags", tags)}
+                    selected={values.tags}
+                    setSelected={(tags) => setFieldValue("tags", tags)}
                   />
                           <Switch
                             checked={values.isShow}
