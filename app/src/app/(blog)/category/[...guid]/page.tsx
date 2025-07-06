@@ -42,52 +42,56 @@ export default async function BlogGuid({ params }: BlogCategoriesGuidProps) {
 
   if (!guid) return notFound();
 
-  const isPaging = isPagingParams(guid);
-  const latestGuid = getLatestParam(isPaging, guid);
-  const categoryData = await CategoryService.getItemByGuid(latestGuid);
+  try {
+    const isPaging = isPagingParams(guid);
+    const latestGuid = getLatestParam(isPaging, guid);
+    const categoryData = await CategoryService.getItemByGuid(latestGuid);
 
-  const data = (
-    await ArticleService.getItems({
-      category: categoryData?.data?._id,
-      page: getPageParam(isPaging, guid),
-      pageSize: PAGE_SIZE,
-      paging: 1,
-    })
-  )?.data as ListResponseModel<ArticleModel[]>;
+    const data = (
+      await ArticleService.getItems({
+        category: categoryData?.data?._id,
+        page: getPageParam(isPaging, guid),
+        pageSize: PAGE_SIZE,
+        paging: 1,
+      })
+    )?.data as ListResponseModel<ArticleModel[]>;
 
-  return (
-    <Fragment>
-      <Paper
-        elevation={1}
-        component="header"
-        sx={{ padding: 1, paddingRight: 2, paddingLeft: 2, marginBottom: 3 }}
-      >
-        <Typography
-          component="h1"
-          variant="subtitle1"
-          fontWeight="bold"
-        >{`Category: ${categoryData?.data?.title}`}</Typography>
-        {categoryData?.data?.description && (
-          <Typography component="p" variant="caption" color="gray">
-            {categoryData?.data?.description}
-          </Typography>
-        )}
-      </Paper>
-      <Box component="section">
-        {data.results.map((item) => (
-          <ArticleItem key={item._id} data={item} />
-        ))}
-      </Box>
+    return (
+      <Fragment>
+        <Paper
+          elevation={1}
+          component="header"
+          sx={{ padding: 1, paddingRight: 2, paddingLeft: 2, marginBottom: 3 }}
+        >
+          <Typography
+            component="h1"
+            variant="subtitle1"
+            fontWeight="bold"
+          >{`Category: ${categoryData?.data?.title}`}</Typography>
+          {categoryData?.data?.description && (
+            <Typography component="p" variant="caption" color="gray">
+              {categoryData?.data?.description}
+            </Typography>
+          )}
+        </Paper>
+        <Box component="section">
+          {data.results.map((item) => (
+            <ArticleItem key={item._id} data={item} />
+          ))}
+        </Box>
 
-      <Box component="section">
-        <Pagination
-          routerUrl={`category/${guid.join("/")}/page`}
-          totalPages={data.totalPages}
-          currentPage={data.currentPage}
-        />
-      </Box>
-    </Fragment>
-  );
+        <Box component="section">
+          <Pagination
+            routerUrl={`category/${guid.join("/")}/page`}
+            totalPages={data.totalPages}
+            currentPage={data.currentPage}
+          />
+        </Box>
+      </Fragment>
+    );
+  } catch (err) {
+    return notFound();
+  }
 }
 
 const generateGuidUrls = (
