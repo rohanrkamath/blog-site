@@ -34,7 +34,7 @@ moment.locale('tr')
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService<IEnv>) => ({
-        uri: configService.get('MONGODB_URI'),
+        uri: configService.get('MONGO_URL'),
         dbName: configService.get('MONGODB_DB_NAME'),
         auth: {
           username: configService.get('MONGODB_DB_USER'),

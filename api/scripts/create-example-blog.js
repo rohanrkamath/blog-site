@@ -22,7 +22,7 @@ const Article = mongoose.model('Article', articleSchema);
 
 async function createExampleBlog() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGO_URL);
     
     await Article.create({
       title: 'The Art of Writing Clean Code',

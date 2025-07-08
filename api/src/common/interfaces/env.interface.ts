@@ -1,5 +1,5 @@
 export interface IEnv {
-  MONGODB_URI: string
+  MONGO_URL: string
   MONGODB_DB_NAME: string
   MONGODB_DB_USER: string
   MONGODB_DB_PASS: string
