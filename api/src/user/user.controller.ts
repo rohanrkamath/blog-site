@@ -63,8 +63,16 @@ export class UserController {
     type: DefaultException,
   })
   @Post('register')
-  async create() {
-    throw new BadRequestException('Registration is disabled.');
+  async create(@Body() registerUserDto: UserDto) {
+    // Optionally, check for existing user here or rely on service
+    const exists = await this.service.findUser(registerUserDto.userName, registerUserDto.email)
+    if (exists) {
+      throw new BadRequestException('There is a registered user with the same username or email.')
+    }
+    if (registerUserDto.password) {
+      registerUserDto.password = await this.passwordHelper.passwordHash(registerUserDto.password)
+    }
+    return this.service.register(registerUserDto)
   }
 
   @ApiOperation({
