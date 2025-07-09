@@ -392,9 +392,6 @@ export default function NewEditArticle({ id: editId }: NewEditArticleProps) {
             </FormControl>
 
             <Editor value={values.content} setValue={handleChangeSetContent} />
-            <div className="mdx-content">
-              <MarkdownPreview source={values.content} />
-            </div>
           </Stack>
         </Grid>
 

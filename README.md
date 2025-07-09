@@ -1,32 +1,11 @@
 # blog-site
 This is site to store all my learnings amongst other random stuff.
 
-## Tech Stack
+## Deployment checklist
 
-### Frontend
-- Next.js 14
-- React 18
-- Material-UI v5
-- TypeScript
-
-### Backend
-- NestJS
-- MongoDB
-- Mongoose
-- JWT Authentication
-
-### Development
-- TypeScript
-- ESLint & Prettier
-- Jest
-
-### Features
-- Server-side rendering
-- Dynamic routing
-- Dark/Light theme
-- Markdown support
-- Admin dashboard
-- Image uploads
+- [X] Buy domain name
+- [ ] Deploy backend on railway
+- [ ] Deploy frontend on vercel
 
 ## Contact
 - Email: [rkamath1610@gmail.com](mailto:rkamath1610@gmail.com)

@@ -199,7 +199,7 @@ export default function NewEditPage({ id: editId }: NewEditPageProps) {
   return (
     <form method="post" onSubmit={handleSubmit} noValidate>
       <Grid container spacing={2}>
-        <Grid item xs={9}>
+        <Grid item xs={9} sx={{ borderRight: theme => `2px solid ${theme.palette.divider}` }}>
           <Stack spacing={2}>
             <TextField
               required
@@ -274,9 +274,6 @@ export default function NewEditPage({ id: editId }: NewEditPageProps) {
             </FormControl>
 
             <Editor value={values.content} setValue={handleChangeSetContent} />
-            <div className="mdx-content">
-              <MarkdownPreview source={values.content} />
-            </div>
           </Stack>
         </Grid>
 
