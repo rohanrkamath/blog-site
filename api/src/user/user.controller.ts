@@ -64,6 +64,7 @@ export class UserController {
   })
   @Post('register')
   async create(@Body() registerUserDto: UserDto) {
+    // Registration is now enabled - force redeploy
     // Optionally, check for existing user here or rely on service
     const exists = await this.service.findUser(registerUserDto.userName, registerUserDto.email)
     if (exists) {
