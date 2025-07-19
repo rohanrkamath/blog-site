@@ -31,7 +31,13 @@ async function bootstrap() {
   )
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: [
+      'http://localhost:3000', 
+      'http://127.0.0.1:3000',
+      'https://rkamath.com',
+      'https://www.rkamath.com',
+      'https://frontend-rkamath-blog-site-6eioei8t5-rohan-kamaths-projects.vercel.app'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
