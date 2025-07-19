@@ -78,47 +78,6 @@ const Icon = ({ name, ...props }: { name?: string } & SvgIconProps) => {
   }
 };
 
-const EditorWrapperBox = styled(Box)(({ theme }) => ({
-  width: "100%",
-  borderWidth: 1,
-  borderStyle: "solid",
-  borderColor: theme.palette.grey[theme.palette.mode === "dark" ? 800 : 400],
-  borderRadius: theme.spacing(0.5),
-  "& .w-md-editor-toolbar": {
-    borderBottomWidth: 1,
-    borderBottomStyle: "solid",
-    borderBottomColor:
-      theme.palette.grey[theme.palette.mode === "dark" ? 800 : 400],
-  },
-  "& .w-md-editor-show-live": {
-    "& .w-md-editor-area": {
-      borderRadius: 0,
-      borderRightWidth: 3,
-      borderRightStyle: "solid",
-      borderRightColor: "#666666",
-    },
-    "& .w-md-editor-preview": {
-      borderLeftWidth: 3,
-      borderLeftStyle: "solid",
-      borderLeftColor: "#666666",
-    },
-  },
-  "& textarea.w-md-editor-text-input, & .wmde-markdown": {
-    lineHeight: 1.5,
-    fontSize: 18,
-    fontFamily: theme.typography.fontFamily,
-    boxSizing: "border-box",
-    padding: 0,
-  },
-  "& textarea.w-md-editor-text-input": {
-    lineHeight: 1.5,
-    fontSize: 20,
-    fontFamily: theme.typography.fontFamily,
-    boxSizing: "border-box",
-    padding: 0,
-  },
-}));
-
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), { ssr: false });
 
@@ -129,8 +88,6 @@ type EditorProps = {
 
 export default function Editor({ value, setValue }: EditorProps) {
   return (
-    <EditorWrapperBox>
-      <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
-    </EditorWrapperBox>
+    <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
   );
 }
