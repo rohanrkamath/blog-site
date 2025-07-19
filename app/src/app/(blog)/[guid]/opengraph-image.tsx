@@ -70,24 +70,13 @@ export default async function Image({ params: { guid } }: BlogGuidProps) {
 
   if (!data.item) return notFound();
 
-  const fontLight = await fetch(
-    new URL("../../../../public/fonts/Inter_24pt-Light.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
-
-  const fontBold = await fetch(
-    new URL("../../../../public/fonts/Inter_24pt-Bold.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
-
   return new ImageResponse(
     (
       <div
         style={{
-          backgroundColor: "#000",
-          backgroundImage: `url(${APP_URL}/images/og-bg-image.jpg)`,
-          backgroundSize: "100%",
-          backgroundRepeat: "no-repeat",
+          backgroundColor: "#1a1a1a",
           color: "#fff",
-          padding: "30px",
+          padding: "40px",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -98,18 +87,19 @@ export default async function Image({ params: { guid } }: BlogGuidProps) {
       >
         <div
           style={{
-            fontFamily: "InterBold",
-            fontSize: 40,
-            fontWeight: 100,
+            fontSize: 32,
+            fontWeight: 300,
+            color: "#888",
           }}
         >
           {SITE_TITLE}
         </div>
         <div
           style={{
-            fontSize: 100,
-            fontWeight: 900,
-            lineHeight: 1,
+            fontSize: 72,
+            fontWeight: 700,
+            lineHeight: 1.1,
+            color: "#fff",
           }}
         >
           {data.item.title}
@@ -124,10 +114,10 @@ export default async function Image({ params: { guid } }: BlogGuidProps) {
         >
           <div
             style={{
-              padding: 10,
-              backgroundColor: "#383838",
-              borderRadius: 5,
-              fontSize: 20,
+              padding: "12px 20px",
+              backgroundColor: "#333",
+              borderRadius: "6px",
+              fontSize: 18,
               color: "#fff",
               display: "flex",
               flexDirection: "row",
@@ -135,44 +125,14 @@ export default async function Image({ params: { guid } }: BlogGuidProps) {
               alignItems: "center",
             }}
           >
-            <span>
-              {/* eslint-disable-next-line @next/next/no-img-element  */}
-              <img
-                src={`${APP_URL}/icons/right-circle-icon.png`}
-                alt=""
-                width={20}
-                height={20}
-              />
-            </span>
-
-            <span
-              style={{
-                marginLeft: 10,
-              }}
-            >
-              Read Article
-            </span>
+            <span>Read Article</span>
           </div>
         </div>
       </div>
     ),
     // ImageResponse options
     {
-      // For convenience, we can re-use the exported opengraph-image
-      // size config to also set the ImageResponse's width and height.
       ...size,
-      fonts: [
-        {
-          name: "InterLight",
-          data: fontLight,
-          style: "normal",
-        },
-        {
-          name: "InterBold",
-          data: fontBold,
-          style: "normal",
-        },
-      ],
     }
   );
 }
