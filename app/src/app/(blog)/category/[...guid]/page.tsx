@@ -112,48 +112,55 @@ const generateGuidUrls = (
 };
 
 export async function generateStaticParams() {
-  const categories = (
-    await CategoryService.getItems({
-      paging: 0,
-    })
-  )?.data as CategoryModel[];
-
-  const paths: {
-    guid: string[];
-  }[] = [];
-
-  for await (const item of categories) {
-    const guidUrls = generateGuidUrls(
-      categories,
-      item.parent?._id as string,
-      item.guid,
-      []
-    );
-
-    const articlePaging = (
-      await ArticleService.getItems({
-        category: item._id,
-        paging: 1,
-        page: 1,
-        pageSize: PAGE_SIZE,
+  try {
+    const categories = (
+      await CategoryService.getItems({
+        paging: 0,
       })
-    )?.data as ListResponseModel<ArticleModel[]>;
+    )?.data as CategoryModel[];
 
-    paths.push({
-      guid: guidUrls,
-    });
+    if (!categories) return [];
 
-    if (articlePaging.totalPages > 1) {
-      [...Array(articlePaging.totalPages)].forEach((_, i) => {
-        //String(i + 1)
-        paths.push({
-          guid: [...guidUrls, "page", String(i + 1)],
-        });
+    const paths: {
+      guid: string[];
+    }[] = [];
+
+    for await (const item of categories) {
+      const guidUrls = generateGuidUrls(
+        categories,
+        item.parent?._id as string,
+        item.guid,
+        []
+      );
+
+      const articlePaging = (
+        await ArticleService.getItems({
+          category: item._id,
+          paging: 1,
+          page: 1,
+          pageSize: PAGE_SIZE,
+        })
+      )?.data as ListResponseModel<ArticleModel[]>;
+
+      paths.push({
+        guid: guidUrls,
       });
-    }
-  }
 
-  return paths;
+      if (articlePaging?.totalPages > 1) {
+        [...Array(articlePaging.totalPages)].forEach((_, i) => {
+          //String(i + 1)
+          paths.push({
+            guid: [...guidUrls, "page", String(i + 1)],
+          });
+        });
+      }
+    }
+
+    return paths;
+  } catch (error) {
+    console.error('Error generating static params for category paths:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({

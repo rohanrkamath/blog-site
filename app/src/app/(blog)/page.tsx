@@ -36,30 +36,42 @@ export default async function BlogIndex() {
   // Force cache revalidation
   headers();
   
-  const articles = (await ArticleService.getItems({
-    page: 1,
-    pageSize: PAGE_SIZE,
-    order: "publishingDate",
-    orderBy: OrderType.ASC,
-    isShow: true
-  }))?.data as ListResponseModel<ArticleModel[]>;
+  try {
+    const articles = (await ArticleService.getItems({
+      page: 1,
+      pageSize: PAGE_SIZE,
+      order: "publishingDate",
+      orderBy: OrderType.ASC,
+      isShow: true
+    }))?.data as ListResponseModel<ArticleModel[]>;
 
-  if (!articles) return notFound();
+    if (!articles) return notFound();
 
-  return (
-    <Fragment>
-      <Box component="section">
-        {articles.results?.map((item: ArticleModel) => (
-          <ArticleItem data={item} key={item._id} />
-        ))}
-      </Box>
-      <Box component="section" sx={{ mt: 4 }}>
-        <Pagination
-          routerUrl={`page`}
-          totalPages={articles.totalPages}
-          currentPage={1}
-        />
-      </Box>
-    </Fragment>
-  );
+    return (
+      <Fragment>
+        <Box component="section">
+          {articles.results?.map((item: ArticleModel) => (
+            <ArticleItem data={item} key={item._id} />
+          ))}
+        </Box>
+        <Box component="section" sx={{ mt: 4 }}>
+          <Pagination
+            routerUrl={`page`}
+            totalPages={articles.totalPages}
+            currentPage={1}
+          />
+        </Box>
+      </Fragment>
+    );
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    // Return a fallback UI if backend is not accessible
+    return (
+      <Fragment>
+        <Box component="section" sx={{ textAlign: 'center', py: 4 }}>
+          <p>Unable to load articles at the moment. Please try again later.</p>
+        </Box>
+      </Fragment>
+    );
+  }
 }

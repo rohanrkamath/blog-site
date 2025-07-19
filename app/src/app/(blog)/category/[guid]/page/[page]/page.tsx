@@ -93,43 +93,50 @@ export default async function BlogCategoryPaging({
 }
 
 export async function generateStaticParams() {
-  const categories = (
-    await CategoryService.getItems({
-      paging: 0,
-    })
-  )?.data as CategoryModel[];
-
-  let categoryGuidTotalPages = [];
-
-  for await (const category of categories) {
-    const articlePaging = (
-      await ArticleService.getItems({
-        category: category._id,
-        paging: 1,
-        page: 1,
-        pageSize: PAGE_SIZE,
+  try {
+    const categories = (
+      await CategoryService.getItems({
+        paging: 0,
       })
-    )?.data as ListResponseModel<ArticleModel[]>;
+    )?.data as CategoryModel[];
 
-    categoryGuidTotalPages.push({
-      guid: category.guid,
-      totalPages: articlePaging.totalPages,
-    });
-  }
+    if (!categories) return [];
 
-  const paths = new Array<StaticPathParams>();
+    let categoryGuidTotalPages = [];
 
-  for (const item of categoryGuidTotalPages) {
-    if (item.totalPages <= 1) continue;
-    [...Array(item.totalPages)].forEach((_, i) => {
-      paths.push({
-        guid: item.guid,
-        page: String(i + 1),
+    for await (const category of categories) {
+      const articlePaging = (
+        await ArticleService.getItems({
+          category: category._id,
+          paging: 1,
+          page: 1,
+          pageSize: PAGE_SIZE,
+        })
+      )?.data as ListResponseModel<ArticleModel[]>;
+
+      categoryGuidTotalPages.push({
+        guid: category.guid,
+        totalPages: articlePaging?.totalPages || 0,
       });
-    });
-  }
+    }
 
-  return paths;
+    const paths = new Array<StaticPathParams>();
+
+    for (const item of categoryGuidTotalPages) {
+      if (item.totalPages <= 1) continue;
+      [...Array(item.totalPages)].forEach((_, i) => {
+        paths.push({
+          guid: item.guid,
+          page: String(i + 1),
+        });
+      });
+    }
+
+    return paths;
+  } catch (error) {
+    console.error('Error generating static params for category pages:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({

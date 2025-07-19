@@ -125,6 +125,19 @@ type EditorProps = {
 
 export default function Editor({ value, setValue }: EditorProps) {
   return (
-    <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
+    <EditorWrapperBox sx={{
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      "& .w-md-editor-show-live": {
+        "& .w-md-editor-area": {
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        },
+        "& .w-md-editor-preview": {
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          borderLeft: '1px solid #666',
+        }
+      }
+    }}>
+      <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
+    </EditorWrapperBox>
   );
 }

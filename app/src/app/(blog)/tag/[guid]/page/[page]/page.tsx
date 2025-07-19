@@ -87,42 +87,50 @@ export default async function BlogTagPaging({ params }: BlogTagPagingProps) {
 }
 
 export async function generateStaticParams() {
-  const tags = (
-    await TagService.getItems({
-      paging: 0,
-    })
-  )?.data as TagModel[];
-  let tagGuidTotalPages = [];
-
-  for await (const tag of tags) {
-    const articlePaging = (
-      await ArticleService.getItems({
-        tag: tag._id,
-        paging: 1,
-        page: 1,
-        pageSize: PAGE_SIZE,
+  try {
+    const tags = (
+      await TagService.getItems({
+        paging: 0,
       })
-    )?.data as ListResponseModel<ArticleModel[]>;
+    )?.data as TagModel[];
+    
+    if (!tags) return [];
+    
+    let tagGuidTotalPages = [];
 
-    tagGuidTotalPages.push({
-      guid: tag.guid,
-      totalPages: articlePaging.totalPages,
-    });
-  }
+    for await (const tag of tags) {
+      const articlePaging = (
+        await ArticleService.getItems({
+          tag: tag._id,
+          paging: 1,
+          page: 1,
+          pageSize: PAGE_SIZE,
+        })
+      )?.data as ListResponseModel<ArticleModel[]>;
 
-  const paths = new Array<StaticPathParams>();
-
-  for (const tag of tagGuidTotalPages) {
-    if (tag.totalPages <= 1) continue;
-    [...Array(tag.totalPages)].forEach((_, i) => {
-      paths.push({
+      tagGuidTotalPages.push({
         guid: tag.guid,
-        page: String(i + 1),
+        totalPages: articlePaging?.totalPages || 0,
       });
-    });
-  }
+    }
 
-  return paths;
+    const paths = new Array<StaticPathParams>();
+
+    for (const tag of tagGuidTotalPages) {
+      if (tag.totalPages <= 1) continue;
+      [...Array(tag.totalPages)].forEach((_, i) => {
+        paths.push({
+          guid: tag.guid,
+          page: String(i + 1),
+        });
+      });
+    }
+
+    return paths;
+  } catch (error) {
+    console.error('Error generating static params for tag pages:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({

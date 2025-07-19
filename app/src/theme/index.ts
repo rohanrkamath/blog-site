@@ -9,7 +9,6 @@ import { useMemo } from "react";
 // ** mui
 import { createTheme } from "@mui/material/styles";
 import { common, grey, blue } from "@mui/material/colors";
-import { trTR } from "@mui/material/locale";
 
 // ** models
 import { PaletteMode } from "@/models/enums";
@@ -110,7 +109,7 @@ const Theme = (deviceType: string, mode: PaletteMode) => {
             },
           },
         },
-        trTR
+        // enUS (default)
       ),
     [mode, deviceType]
   );
