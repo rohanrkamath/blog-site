@@ -93,10 +93,14 @@ const EditorWrapperBox = styled(Box)(({ theme }) => ({
   "& .w-md-editor-show-live": {
     "& .w-md-editor-area": {
       borderRadius: 0,
-      borderRightWidth: 1,
+      borderRightWidth: 3,
       borderRightStyle: "solid",
-      borderRightColor:
-        theme.palette.grey[theme.palette.mode === "dark" ? 800 : 400],
+      borderRightColor: "#666666",
+    },
+    "& .w-md-editor-preview": {
+      borderLeftWidth: 3,
+      borderLeftStyle: "solid",
+      borderLeftColor: "#666666",
     },
   },
   "& textarea.w-md-editor-text-input, & .wmde-markdown": {
@@ -125,19 +129,6 @@ type EditorProps = {
 
 export default function Editor({ value, setValue }: EditorProps) {
   return (
-    <EditorWrapperBox sx={{
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      "& .w-md-editor-show-live": {
-        "& .w-md-editor-area": {
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        },
-        "& .w-md-editor-preview": {
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          borderLeft: '1px solid #666',
-        }
-      }
-    }}>
-      <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
-    </EditorWrapperBox>
+    <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
   );
 }
