@@ -129,6 +129,8 @@ type EditorProps = {
 
 export default function Editor({ value, setValue }: EditorProps) {
   return (
-    <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
+    <EditorWrapperBox>
+      <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
+    </EditorWrapperBox>
   );
 }
