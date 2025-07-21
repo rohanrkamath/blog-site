@@ -44,17 +44,56 @@ import { IdParamsDto } from '@/common/dto/params.dto'
 import { IFile } from '@/file/interfaces/file.interface'
 import { Response } from 'express'
 import { join } from 'path'
+
+// Helper function to get the correct upload path
+const getUploadPath = (configService: ConfigService<IEnv>) => {
+  const uploadPath = configService.get('UPLOAD_FOLDER_PATH')
+  
+  // Try multiple possible paths for Railway
+  const possiblePaths = [
+    uploadPath,
+    join(process.cwd(), uploadPath),
+    '/tmp/uploads',
+    '/app/uploads',
+    '/data/uploads',
+    join(process.cwd(), 'uploads'),
+  ]
+
+  for (const path of possiblePaths) {
+    try {
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path, { recursive: true })
+      }
+      // Test if we can write to this directory
+      const testFile = join(path, '.test')
+      fs.writeFileSync(testFile, 'test')
+      fs.unlinkSync(testFile)
+      console.log(`Using upload path for controller: ${path}`)
+      return path
+    } catch (error) {
+      console.log(`Path ${path} not writable for controller:`, error.message)
+      continue
+    }
+  }
+  
+  // Fallback to the original path
+  return uploadPath
+}
+
 @ApiTags('File')
 @Controller('file')
 export class FileController {
+  private uploadFolder: string
+
   constructor(
     private readonly service: FileService,
     private readonly fileMessage: FileMessage,
     private readonly queryHelper: QueryHelper,
-    private configService: ConfigService<IEnv>,
-  ) {}
-
-  private uploadFolder = this.configService.get<string>('UPLOAD_FOLDER_PATH')
+    private readonly configService: ConfigService<IEnv>,
+  ) {
+    this.uploadFolder = getUploadPath(configService)
+  }
 
   @ApiOperation({
     summary: 'Get file items.',

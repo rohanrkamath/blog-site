@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { MulterModule } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import * as fs from 'fs'
+import { join } from 'path'
 
 import { IEnv } from '@/common/interfaces/env.interface'
 
@@ -23,6 +24,42 @@ import { Page, PageSchema } from '@/page/schemas/page.schema'
 import { FileMessage } from '@/common/messages'
 import { editFileName } from '@/common/utils/edit-file-name.util'
 
+// Helper function to get the correct upload path
+const getUploadPath = (configService: ConfigService<IEnv>) => {
+  const uploadPath = configService.get('UPLOAD_FOLDER_PATH')
+  
+  // Try multiple possible paths for Railway
+  const possiblePaths = [
+    uploadPath,
+    join(process.cwd(), uploadPath),
+    '/tmp/uploads',
+    '/app/uploads',
+    '/data/uploads',
+    join(process.cwd(), 'uploads'),
+  ]
+
+  for (const path of possiblePaths) {
+    try {
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path, { recursive: true })
+      }
+      // Test if we can write to this directory
+      const testFile = join(path, '.test')
+      fs.writeFileSync(testFile, 'test')
+      fs.unlinkSync(testFile)
+      console.log(`Using upload path for Multer: ${path}`)
+      return path
+    } catch (error) {
+      console.log(`Path ${path} not writable for Multer:`, error.message)
+      continue
+    }
+  }
+  
+  // Fallback to the original path
+  return uploadPath
+}
+
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
@@ -31,22 +68,26 @@ import { editFileName } from '@/common/utils/edit-file-name.util'
     MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }]),
     MulterModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService<IEnv>) => ({
-        storage: diskStorage({
-          destination: (req, file, cb) => {
-            const { path } = req.body
-            let dir = `${configService.get<string>('UPLOAD_FOLDER_PATH')}`
-            if (path) dir += `/${path}`
-            if (!fs.existsSync(dir)) {
-              return fs.mkdir(dir, { recursive: true }, (error) =>
-                cb(error, dir),
-              )
-            }
-            return cb(null, dir)
-          },
-          filename: editFileName,
-        }),
-      }),
+      useFactory: async (configService: ConfigService<IEnv>) => {
+        const uploadPath = getUploadPath(configService)
+        
+        return {
+          storage: diskStorage({
+            destination: (req, file, cb) => {
+              const { path } = req.body
+              let dir = uploadPath
+              if (path) dir += `/${path}`
+              if (!fs.existsSync(dir)) {
+                return fs.mkdir(dir, { recursive: true }, (error) =>
+                  cb(error, dir),
+                )
+              }
+              return cb(null, dir)
+            },
+            filename: editFileName,
+          }),
+        }
+      },
       inject: [ConfigService],
     }),
   ],
