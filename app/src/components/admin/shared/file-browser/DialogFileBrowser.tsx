@@ -28,7 +28,17 @@ const DialogFileBrowser = ({
   handleConfirmFunction,
   ...props
 }: DialogFileBrowserProps) => {
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    console.log("DialogFileBrowser handleClose called");
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    console.log("DialogFileBrowser handleConfirm called");
+    handleConfirmFunction();
+  };
+
+  console.log("DialogFileBrowser render - open:", open);
 
   return (
     <Dialog fullWidth maxWidth={"xl"} open={open} onClose={handleClose}>
@@ -40,7 +50,7 @@ const DialogFileBrowser = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-        <Button onClick={() => handleConfirmFunction()} autoFocus>
+        <Button onClick={handleConfirm} autoFocus>
           Confirm
         </Button>
       </DialogActions>

@@ -70,22 +70,32 @@ export default function ImageCommandComponent({
     setImageBrowserOpen(false);
   };
 
-  const handlePopoverOpenClick = (event: MouseEvent<HTMLButtonElement>) =>
+  const handlePopoverOpenClick = (event: MouseEvent<HTMLButtonElement>) => {
+    console.log("Image button clicked");
     setAnchorEl(event.currentTarget);
+  };
 
-  const handlePopoverClose = () => setAnchorEl(null);
+  const handlePopoverClose = () => {
+    console.log("Popover closed");
+    setAnchorEl(null);
+  };
 
   const handleClickCommand = (command: ICommand) => {
+    console.log("handleClickCommand called with:", command);
     executeCommand(command);
     handlePopoverClose();
   };
 
   const handleSelectImage = () => {
+    console.log("handleSelectImage called - opening file browser");
     handlePopoverClose();
     setImageBrowserOpen(true);
   };
 
-  const handleSelectImageChange = (data: FileModel[]) => setSelectImages(data);
+  const handleSelectImageChange = (data: FileModel[]) => {
+    console.log("handleSelectImageChange called with:", data);
+    setSelectImages(data);
+  };
 
   return (
     <Fragment>

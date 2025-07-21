@@ -356,22 +356,34 @@ export default function FileBrowser({
   };
 
   const handleItemClick = (item: FileModel) => {
+    console.log("handleItemClick called with:", item);
+    console.log("enableSelectedFiles:", enableSelectedFiles);
+    console.log("handleSelectFilesChange:", handleSelectFilesChange);
+    
     if (item.isFolder) {
+      console.log("Item is a folder, navigating");
       handleFolderClick(item._id);
       return;
     }
 
-    if (!enableSelectedFiles || !handleSelectFilesChange) return;
+    if (!enableSelectedFiles || !handleSelectFilesChange) {
+      console.log("File selection not enabled or no handler provided");
+      return;
+    }
 
+    console.log("Processing file selection");
     let _selectFiles = [...selectFiles];
 
     const findIndex = selectedFiles.findIndex((f) => f._id === item._id);
     if (findIndex < 0) {
+      console.log("Adding file to selection");
       _selectFiles = [..._selectFiles, item];
     } else {
+      console.log("Removing file from selection");
       _selectFiles.splice(findIndex, 1);
     }
 
+    console.log("Updated selection:", _selectFiles);
     handleSelectFilesChange(_selectFiles);
     setSelectFiles(_selectFiles);
   };
