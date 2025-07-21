@@ -39,6 +39,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteIcon from '@mui/icons-material/Delete';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // ** models
 import FileModel, { FileListQueryModel } from "@/models/FileModel";
@@ -283,6 +284,14 @@ export default function FileBrowser({
   };
 
   const handleClickDownloadMenuItem = () => {};
+
+  const handleClickCopyUrlMenuItem = () => {
+    if (!contextMenuData) return;
+    const fileUrl = generateFileUrl(contextMenuData);
+    navigator.clipboard.writeText(fileUrl);
+    enqueueSnackbar('File URL copied to clipboard!', { variant: 'success' });
+    handleMenuClose();
+  };
 
   const handleClickEditMenuItem = () => {
     if (!contextMenuData) return;
@@ -590,6 +599,12 @@ export default function FileBrowser({
                 <DownloadIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Download</ListItemText>
+            </MenuItem>
+            <MenuItem disabled={isLoading} onClick={handleClickCopyUrlMenuItem}>
+              <ListItemIcon>
+                <ContentCopyIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Copy URL</ListItemText>
             </MenuItem>
             <MenuItem disabled={isLoading} onClick={handleClickDeleteMenuItem}>
               <ListItemIcon>
