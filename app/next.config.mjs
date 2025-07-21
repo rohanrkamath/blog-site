@@ -12,6 +12,12 @@ const nextConfig = {
         port: '4000',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'backend-rkamath-blog-site-production.up.railway.app',
+        port: '',
+        pathname: '/uploads/**',
+      },
     ],
   },
   experimental: {
