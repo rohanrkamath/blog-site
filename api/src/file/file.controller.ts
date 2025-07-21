@@ -11,6 +11,7 @@ import {
   UploadedFiles,
   UseGuards,
   UseInterceptors,
+  Res,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -28,7 +29,7 @@ import { FilesInterceptor } from '@nestjs/platform-express'
 import { ConfigService } from '@nestjs/config'
 import { FileService } from '@/file/file.service'
 import { FileMessage } from '@/common/messages'
-import { File } from '@/file/schemas/file.schema'
+import { File, FileDocument } from '@/file/schemas/file.schema'
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard'
 import { ListResultDto } from '@/common/dto/list-result.dto'
 import { FileDto } from '@/file/dto/file.dto'
@@ -41,6 +42,8 @@ import { slugifyTR } from '@/common/utils/slugify-tr.util'
 import { UpdateFileDto } from '@/file/dto/update-file.dto'
 import { IdParamsDto } from '@/common/dto/params.dto'
 import { IFile } from '@/file/interfaces/file.interface'
+import { Response } from 'express'
+import { join } from 'path'
 @ApiTags('File')
 @Controller('file')
 export class FileController {
@@ -223,5 +226,23 @@ export class FileController {
           item.filename
         }`,
       )
+  }
+
+  @ApiOperation({
+    summary: 'Serve file.',
+  })
+  @ApiParam({ name: 'filename', type: String })
+  @Get('serve/:filename')
+  async serveFile(@Param('filename') filename: string, @Res() res: Response) {
+    try {
+      const filePath = join(this.uploadFolder, filename)
+      if (fs.existsSync(filePath)) {
+        res.sendFile(filePath)
+      } else {
+        res.status(404).json({ message: 'File not found' })
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error serving file' })
+    }
   }
 }
