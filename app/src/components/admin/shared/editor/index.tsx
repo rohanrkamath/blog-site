@@ -93,8 +93,15 @@ export default function Editor({ value, setValue }: EditorProps) {
   const editorRef = useRef<any>(null);
 
   const executeCommand = (command: any) => {
-    if (editorRef.current && command.name === "customImage") {
-      command.execute(null, editorRef.current);
+    console.log("executeCommand called with:", command);
+    if (editorRef.current) {
+      if (command.name === "customImage") {
+        console.log("Executing customImage command");
+        command.execute(null, editorRef.current);
+      } else if (command.name === "image") {
+        console.log("Executing image command");
+        command.execute(null, editorRef.current);
+      }
     }
   };
 

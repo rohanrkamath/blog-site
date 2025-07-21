@@ -46,18 +46,23 @@ export default function ImageCommandComponent({
   const id = open ? `${imageCommand.name}-popover` : undefined;
 
   const selectImagesConfirm = () => {
+    console.log("selectImagesConfirm called with:", selectImages);
     if (!selectImages || selectImages.length <= 0) {
+      console.log("No images selected, closing dialog");
       setImageBrowserOpen(false);
       return;
     }
 
+    console.log("Executing customImage command with images:", selectImages);
     executeCommand({
       name: "customImage",
       keyCommand: "customImage",
       execute: (state, api) => {
+        console.log("customImage execute function called");
         const markdown = selectImages.map(
           (item) => `![${item.title || item.filename}](${generateFileUrl(item)})`
         );
+        console.log("Generated markdown:", markdown);
         api.replaceSelection(markdown.join("\n"));
       },
     });
