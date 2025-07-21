@@ -31,6 +31,7 @@ import ImageIcon from "@mui/icons-material/Image";
 
 // ** third party
 import * as commands from "@uiw/react-md-editor/commands";
+import ImageCommandComponent from "./commands/ImageCommand";
 
 const Icon = ({ name, ...props }: { name?: string } & SvgIconProps) => {
   switch (name) {
@@ -89,6 +90,19 @@ type EditorProps = {
 
 export default function Editor({ value, setValue }: EditorProps) {
   return (
-    <MDEditor value={value} onChange={(val) => setValue(val || "")} height={800} />
+    <MDEditor 
+      value={value} 
+      onChange={(val) => setValue(val || "")} 
+      height={800}
+      commands={[
+        ...commands.getCommands(),
+        {
+          name: "image",
+          keyCommand: "image",
+          buttonProps: { "aria-label": "Add image" },
+          icon: <ImageCommandComponent index={0} disabled={false} executeCommand={() => {}} command={{ name: "image", keyCommand: "image" }} />,
+        },
+      ]}
+    />
   );
 }
