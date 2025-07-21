@@ -27,6 +27,7 @@ import ChecklistIcon from "@mui/icons-material/Checklist";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import SplitscreenIcon from "@mui/icons-material/Splitscreen";
+import ImageIcon from "@mui/icons-material/Image";
 
 // ** third party
 import * as commands from "@uiw/react-md-editor/commands";
@@ -70,8 +71,8 @@ const Icon = ({ name, ...props }: { name?: string } & SvgIconProps) => {
     case commands.codeLive.name:
       return <SplitscreenIcon {...props} sx={{ transform: "rotate(90deg)" }} />;
 
-    // case 'image':
-    //   return <ImageIcon {...props} />
+    case "image":
+      return <ImageIcon {...props} />;
 
     default:
       return <></>;
