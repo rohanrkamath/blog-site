@@ -1,5 +1,5 @@
 export const SITE_CONFIG = {
-  title: 'Rohan Kamath - Blog',
+  title: 'Rohan Kamath',
   description: 'Blog to store my experiences, thoughts and learnings.',
   author: 'Rohan Kamath',
   email: 'rkamath1610g@gmail.com',
