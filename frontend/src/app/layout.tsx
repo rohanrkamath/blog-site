@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import React from 'react'
 import { SITE_CONFIG } from '@/config'
 import ThemeToggle from '@/components/ThemeToggle'
+import MobileNav from '@/components/MobileNav'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -65,76 +67,35 @@ export default function RootLayout({
           backgroundColor: 'var(--bg-primary)',
           color: 'var(--text-primary)'
         }}>
-          <header style={{ 
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1000,
-            borderBottom: '1px solid var(--border-color)',
-            backgroundColor: 'var(--bg-primary)'
-          }}>
-            <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0.75rem 2rem' }}>
-              <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <a href="/" style={{ 
-                  fontSize: '1.25rem', 
-                  fontWeight: 'bold', 
-                  color: 'var(--text-primary)',
-                  textDecoration: 'none'
-                }}>
+          <header className="site-header">
+            <div className="header-container">
+              <nav className="header-nav">
+                <a href="/" className="site-title">
                   {SITE_CONFIG.title}
                 </a>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                  <a href="/blog" style={{ 
-                    color: 'var(--text-secondary)', 
-                    textDecoration: 'none',
-                    transition: 'var(--transition)',
-                    fontSize: '0.9rem'
-                  }}>
+                <div className="nav-links desktop-nav">
+                  <a href="/blog" className="nav-link">
                     Blog
                   </a>
-                  <a href="/about" style={{ 
-                    color: 'var(--text-secondary)', 
-                    textDecoration: 'none',
-                    transition: 'var(--transition)',
-                    fontSize: '0.9rem'
-                  }}>
+                  <a href="/about" className="nav-link">
                     About
                   </a>
-                  <a href="/hobby-projects" style={{ 
-                    color: 'var(--text-secondary)', 
-                    textDecoration: 'none',
-                    transition: 'var(--transition)',
-                    fontSize: '0.9rem'
-                  }}>
+                  <a href="/hobby-projects" className="nav-link">
                     Hobby Projects
                   </a>
                   <ThemeToggle />
                 </div>
+                <div className="mobile-nav-toggle">
+                  <MobileNav />
+                </div>
               </nav>
             </div>
           </header>
-          <main style={{ 
-            maxWidth: '1000px', 
-            margin: '0 auto', 
-            padding: '2rem 2rem',
-            paddingTop: 'calc(2rem + 60px)',
-            minHeight: 'calc(100vh - 60px)'
-          }}>
+          <main className="main-content">
             {children}
           </main>
-          <footer style={{ 
-            borderTop: '1px solid var(--border-color)', 
-            marginTop: '4rem',
-            backgroundColor: 'var(--bg-secondary)'
-          }}>
-                          <div style={{ 
-                maxWidth: '1000px', 
-                margin: '0 auto', 
-                padding: '1rem 2rem', 
-                textAlign: 'center', 
-                color: 'var(--text-secondary)'
-              }}>
+          <footer className="site-footer">
+            <div className="footer-container">
               <p>&copy; 2024 {SITE_CONFIG.author}. All rights reserved.</p>
             </div>
           </footer>

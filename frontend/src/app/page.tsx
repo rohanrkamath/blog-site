@@ -2,62 +2,61 @@ import { getAllPosts } from '@/lib/markdown'
 import { SITE_CONFIG, PAGE_SIZE } from '@/config'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { getTagColor } from '@/utils/tagColors'
 
 export default async function HomePage() {
   const posts = await getAllPosts()
   const recentPosts = posts.slice(0, PAGE_SIZE)
+  
+  // Get all unique tags for consistent color assignment
+  const allTags = Array.from(new Set(posts.flatMap(post => post.tags || []))).sort()
 
   return (
-    <div>
-      <section style={{ marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--text-primary)' }}>
+    <div className="homepage">
+      <section>
+        <h1>
           Welcome to {SITE_CONFIG.title}
         </h1>
-        <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', lineHeight: '1.75' }}>
+        <p className="welcome-description">
           {SITE_CONFIG.description}
         </p>
       </section>
 
       <section>
-        <h2 style={{ fontSize: '1.875rem', fontWeight: '600', marginBottom: '2rem', color: 'var(--text-primary)' }}>
+        <h2>
           Recent Posts
         </h2>
         
         {recentPosts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-secondary)' }}>
+          <div className="no-posts">
             <p>No posts found. Create your first post in the content/posts directory.</p>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div className="recent-posts">
             {recentPosts.map((post) => (
-              <article key={post.slug} style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '2rem' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>
-                  <Link 
-                    href={`/posts/${post.slug}`}
-                    style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
-                  >
+              <article key={post.slug} className="post-article">
+                <h3 className="post-title">
+                  <Link href={`/posts/${post.slug}`}>
                     {post.title}
                   </Link>
                 </h3>
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                <div className="post-meta">
                   <time>{format(new Date(post.date), 'MMMM dd, yyyy')}</time>
-                  <span>•</span>
+                  <span className="meta-separator">•</span>
                   <span>{post.readingTime.text}</span>
                   {post.tags && post.tags.length > 0 && (
                     <>
-                      <span>•</span>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <span className="meta-separator">•</span>
+                      <div className="post-tags">
                         {post.tags.map((tag) => (
-                          <span
-                            key={tag}
+                          <span 
+                            key={tag} 
+                            className="post-tag"
                             style={{ 
-                              backgroundColor: 'var(--tag-bg)', 
-                              padding: '0.25rem 0.5rem', 
-                              borderRadius: '0.25rem', 
-                              fontSize: '0.75rem',
-                              color: 'var(--tag-text)',
-                              display: 'inline-block'
+                              backgroundColor: getTagColor(tag, allTags),
+                              color: 'white',
+                              borderColor: getTagColor(tag, allTags)
                             }}
                           >
                             {tag}
@@ -68,22 +67,12 @@ export default async function HomePage() {
                   )}
                 </div>
                 
-                <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                <p className="post-description">
                   {post.description}
                 </p>
                 
-                <Link 
-                  href={`/posts/${post.slug}`}
-                  style={{ 
-                    display: 'inline-block',
-                    marginTop: '1rem',
-                    color: 'var(--link-color)',
-                    textDecoration: 'none',
-                    fontWeight: '500',
-                    transition: 'var(--transition)'
-                  }}
-                >
-                  Read more →
+                <Link href={`/posts/${post.slug}`} className="read-more-link">
+                  Read more
                 </Link>
               </article>
             ))}
@@ -91,20 +80,8 @@ export default async function HomePage() {
         )}
         
         {posts.length > PAGE_SIZE && (
-          <div style={{ marginTop: '3rem', textAlign: 'center' }}>
-            <Link 
-              href="/blog"
-              style={{
-                display: 'inline-block',
-                backgroundColor: 'var(--link-color)',
-                color: 'white',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '0.5rem',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'var(--transition)'
-              }}
-            >
+          <div className="view-all-posts">
+            <Link href="/blog">
               View All Posts
             </Link>
           </div>

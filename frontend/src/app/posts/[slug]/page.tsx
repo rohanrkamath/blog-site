@@ -73,8 +73,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   style={{ 
                     backgroundColor: tagColor,
                     color: 'white',
-                    padding: '0.25rem 0.5rem', 
-                    borderRadius: '0.25rem', 
+                    padding: '0.25rem 0.75rem', 
+                    borderRadius: '1rem', 
                     fontSize: '0.75rem',
                     fontWeight: '500',
                     display: 'inline-block'
