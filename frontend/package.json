@@ -1,0 +1,68 @@
+{
+  "name": "blog-site-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static blog frontend built with Next.js and markdown",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "Rohan Kamath",
+    "email": "rkamath1610g@gmail.com",
+    "url": "https://www.rkamath.com"
+  },
+  "homepage": "https://github.com/rohanrkamath",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rohanrkamath/blog-site.git"
+  },
+  "keywords": [
+    "nextjs",
+    "next",
+    "static blog",
+    "markdown blog",
+    "personal blog",
+    "frontend",
+    "javascript"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next build",
+    "new-post": "node scripts/new-post.js",
+    "new-page": "node scripts/new-page.js",
+    "copy-images": "node scripts/copy-images.js"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.13.1",
+    "@emotion/css": "^11.13.0",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.6",
+    "@mui/material": "^5.16.6",
+    "@mui/material-nextjs": "^7.1.0",
+    "date-fns": "^3.6.0",
+    "gray-matter": "^4.0.3",
+    "next": "^14.2.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-syntax-highlighter": "^15.5.0",
+    "reading-time": "^1.5.0",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-html": "^16.0.1",
+    "sass": "^1.77.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "autoprefixer": "^10.4.21",
+    "eslint": "8.57.0",
+    "eslint-config-next": "^14.2.5",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5"
+  }
+}
