@@ -43,52 +43,52 @@ export default async function BlogGuid({ params }: BlogCategoriesGuidProps) {
   if (!guid) return notFound();
 
   try {
-    const isPaging = isPagingParams(guid);
-    const latestGuid = getLatestParam(isPaging, guid);
-    const categoryData = await CategoryService.getItemByGuid(latestGuid);
+  const isPaging = isPagingParams(guid);
+  const latestGuid = getLatestParam(isPaging, guid);
+  const categoryData = await CategoryService.getItemByGuid(latestGuid);
 
-    const data = (
-      await ArticleService.getItems({
-        category: categoryData?.data?._id,
-        page: getPageParam(isPaging, guid),
-        pageSize: PAGE_SIZE,
-        paging: 1,
-      })
-    )?.data as ListResponseModel<ArticleModel[]>;
+  const data = (
+    await ArticleService.getItems({
+      category: categoryData?.data?._id,
+      page: getPageParam(isPaging, guid),
+      pageSize: PAGE_SIZE,
+      paging: 1,
+    })
+  )?.data as ListResponseModel<ArticleModel[]>;
 
-    return (
-      <Fragment>
-        <Paper
-          elevation={1}
-          component="header"
-          sx={{ padding: 1, paddingRight: 2, paddingLeft: 2, marginBottom: 3 }}
-        >
-          <Typography
-            component="h1"
-            variant="subtitle1"
-            fontWeight="bold"
-          >{`Category: ${categoryData?.data?.title}`}</Typography>
-          {categoryData?.data?.description && (
-            <Typography component="p" variant="caption" color="gray">
-              {categoryData?.data?.description}
-            </Typography>
-          )}
-        </Paper>
-        <Box component="section">
-          {data.results.map((item) => (
-            <ArticleItem key={item._id} data={item} />
-          ))}
-        </Box>
+  return (
+    <Fragment>
+      <Paper
+        elevation={1}
+        component="header"
+        sx={{ padding: 1, paddingRight: 2, paddingLeft: 2, marginBottom: 3 }}
+      >
+        <Typography
+          component="h1"
+          variant="subtitle1"
+          fontWeight="bold"
+        >{`Category: ${categoryData?.data?.title}`}</Typography>
+        {categoryData?.data?.description && (
+          <Typography component="p" variant="caption" color="gray">
+            {categoryData?.data?.description}
+          </Typography>
+        )}
+      </Paper>
+      <Box component="section">
+        {data.results.map((item) => (
+          <ArticleItem key={item._id} data={item} />
+        ))}
+      </Box>
 
-        <Box component="section">
-          <Pagination
-            routerUrl={`category/${guid.join("/")}/page`}
-            totalPages={data.totalPages}
-            currentPage={data.currentPage}
-          />
-        </Box>
-      </Fragment>
-    );
+      <Box component="section">
+        <Pagination
+          routerUrl={`category/${guid.join("/")}/page`}
+          totalPages={data.totalPages}
+          currentPage={data.currentPage}
+        />
+      </Box>
+    </Fragment>
+  );
   } catch (err) {
     return notFound();
   }
@@ -113,50 +113,50 @@ const generateGuidUrls = (
 
 export async function generateStaticParams() {
   try {
-    const categories = (
-      await CategoryService.getItems({
-        paging: 0,
-      })
-    )?.data as CategoryModel[];
+  const categories = (
+    await CategoryService.getItems({
+      paging: 0,
+    })
+  )?.data as CategoryModel[];
 
     if (!categories) return [];
 
-    const paths: {
-      guid: string[];
-    }[] = [];
+  const paths: {
+    guid: string[];
+  }[] = [];
 
-    for await (const item of categories) {
-      const guidUrls = generateGuidUrls(
-        categories,
-        item.parent?._id as string,
-        item.guid,
-        []
-      );
+  for await (const item of categories) {
+    const guidUrls = generateGuidUrls(
+      categories,
+      item.parent?._id as string,
+      item.guid,
+      []
+    );
 
-      const articlePaging = (
-        await ArticleService.getItems({
-          category: item._id,
-          paging: 1,
-          page: 1,
-          pageSize: PAGE_SIZE,
-        })
-      )?.data as ListResponseModel<ArticleModel[]>;
+    const articlePaging = (
+      await ArticleService.getItems({
+        category: item._id,
+        paging: 1,
+        page: 1,
+        pageSize: PAGE_SIZE,
+      })
+    )?.data as ListResponseModel<ArticleModel[]>;
 
-      paths.push({
-        guid: guidUrls,
-      });
+    paths.push({
+      guid: guidUrls,
+    });
 
       if (articlePaging?.totalPages > 1) {
-        [...Array(articlePaging.totalPages)].forEach((_, i) => {
-          //String(i + 1)
-          paths.push({
-            guid: [...guidUrls, "page", String(i + 1)],
-          });
+      [...Array(articlePaging.totalPages)].forEach((_, i) => {
+        //String(i + 1)
+        paths.push({
+          guid: [...guidUrls, "page", String(i + 1)],
         });
-      }
+      });
     }
+  }
 
-    return paths;
+  return paths;
   } catch (error) {
     console.error('Error generating static params for category paths:', error);
     return [];

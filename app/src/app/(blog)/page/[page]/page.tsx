@@ -46,32 +46,32 @@ export default async function BlogPaging({ params }: BlogPagingProps) {
   if (isNaN(currentPage) || !currentPage) return notFound();
 
   try {
-    const articles = (await ArticleService.getItems({
-      page: Number(params.page),
-      pageSize: PAGE_SIZE,
-      order: "publishingDate",
-      orderBy: OrderType.ASC,
-      isShow: true
-    }))?.data as ListResponseModel<ArticleModel[]>;
+  const articles = (await ArticleService.getItems({
+    page: Number(params.page),
+    pageSize: PAGE_SIZE,
+    order: "publishingDate",
+    orderBy: OrderType.ASC,
+    isShow: true
+  }))?.data as ListResponseModel<ArticleModel[]>;
 
-    if (!articles) return notFound();
+  if (!articles) return notFound();
 
-    return (
-      <Fragment>
-        <Box component="section">
-          {articles.results?.map((item: ArticleModel) => (
-            <ArticleItem data={item} key={item._id} />
-          ))}
-        </Box>
-        <Box component="section" sx={{ mt: 4 }}>
-          <Pagination
-            routerUrl={`page`}
-            totalPages={articles.totalPages}
-            currentPage={currentPage}
-          />
-        </Box>
-      </Fragment>
-    );
+  return (
+    <Fragment>
+      <Box component="section">
+        {articles.results?.map((item: ArticleModel) => (
+          <ArticleItem data={item} key={item._id} />
+        ))}
+      </Box>
+      <Box component="section" sx={{ mt: 4 }}>
+        <Pagination
+          routerUrl={`page`}
+          totalPages={articles.totalPages}
+          currentPage={currentPage}
+        />
+      </Box>
+    </Fragment>
+  );
   } catch (error) {
     console.error('Error fetching articles:', error);
     return notFound();
@@ -80,20 +80,20 @@ export default async function BlogPaging({ params }: BlogPagingProps) {
 
 export async function generateStaticParams() {
   try {
-    const items = (
-      await ArticleService.getItems({
-        page: 1,
-        pageSize: PAGE_SIZE,
-        isShow: true,
-      })
-    )?.data as ListResponseModel<ArticleModel[]>;
+  const items = (
+    await ArticleService.getItems({
+      page: 1,
+      pageSize: PAGE_SIZE,
+      isShow: true,
+    })
+  )?.data as ListResponseModel<ArticleModel[]>;
 
     if (!items) return [];
 
-    const paths = [...Array(items.totalPages)].map((_, page: number) => ({
-      page: (page + 1).toString(),
-    }));
-    return paths;
+  const paths = [...Array(items.totalPages)].map((_, page: number) => ({
+    page: (page + 1).toString(),
+  }));
+  return paths;
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];

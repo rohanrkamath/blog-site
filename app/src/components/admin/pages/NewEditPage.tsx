@@ -200,141 +200,141 @@ export default function NewEditPage({ id: editId }: NewEditPageProps) {
 
   return (
     <>
-      <form method="post" onSubmit={handleSubmit} noValidate>
-        <Grid container spacing={2}>
+    <form method="post" onSubmit={handleSubmit} noValidate>
+      <Grid container spacing={2}>
           <Grid item xs={9} sx={{ 
             borderRight: '3px solid #666',
             pr: 2,
             backgroundColor: 'rgba(255, 255, 255, 0.05)'
           }}>
-            <Stack spacing={2}>
-              <TextField
-                required
-                fullWidth
-                type="text"
-                id="title"
-                label="Title"
-                variant="outlined"
-                size="medium"
-                disabled={isSubmitting}
-                {...getFieldProps("title")}
-                helperText={errors.title && touched.title ? errors.title : null}
-                error={errors.title ? touched.title : false}
-              />
+          <Stack spacing={2}>
+            <TextField
+              required
+              fullWidth
+              type="text"
+              id="title"
+              label="Title"
+              variant="outlined"
+              size="medium"
+              disabled={isSubmitting}
+              {...getFieldProps("title")}
+              helperText={errors.title && touched.title ? errors.title : null}
+              error={errors.title ? touched.title : false}
+            />
 
-              <TextField
-                required
-                fullWidth
-                multiline
-                type="text"
-                id="shortDescription"
-                label="Short Description"
-                variant="outlined"
-                size="small"
-                disabled={isSubmitting}
-                {...getFieldProps("shortDescription")}
-                helperText={
-                  errors.shortDescription && touched.shortDescription
-                    ? errors.shortDescription
-                    : null
-                }
-                error={errors.shortDescription ? touched.shortDescription : false}
-              />
+            <TextField
+              required
+              fullWidth
+              multiline
+              type="text"
+              id="shortDescription"
+              label="Short Description"
+              variant="outlined"
+              size="small"
+              disabled={isSubmitting}
+              {...getFieldProps("shortDescription")}
+              helperText={
+                errors.shortDescription && touched.shortDescription
+                  ? errors.shortDescription
+                  : null
+              }
+              error={errors.shortDescription ? touched.shortDescription : false}
+            />
 
-              <FormControl
-                fullWidth
-                size="small"
-                variant="outlined"
-                error={errors.guid ? touched.guid : false}
+            <FormControl
+              fullWidth
+              size="small"
+              variant="outlined"
+              error={errors.guid ? touched.guid : false}
+              required
+            >
+              <InputLabel htmlFor="guid">Short Link</InputLabel>
+              <OutlinedInput
+                id="guid"
                 required
-              >
-                <InputLabel htmlFor="guid">Short Link</InputLabel>
-                <OutlinedInput
-                  id="guid"
-                  required
-                  {...getFieldProps("guid")}
-                  disabled={isSubmitting || guidExistsLoading}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      {guidExistsLoading ? (
-                        <CircularProgress size={18} />
+                {...getFieldProps("guid")}
+                disabled={isSubmitting || guidExistsLoading}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {guidExistsLoading ? (
+                      <CircularProgress size={18} />
+                    ) : (
+                      guidExists !== null &&
+                      (!guidExists ? (
+                        <DoneIcon />
                       ) : (
-                        guidExists !== null &&
-                        (!guidExists ? (
-                          <DoneIcon />
-                        ) : (
-                          <Tooltip
-                            title="The GUID you are trying to add is already in use."
-                            placement="top"
-                          >
-                            <WarningIcon />
-                          </Tooltip>
-                        ))
-                      )}
-                    </InputAdornment>
-                  }
-                  label="Short Link"
-                />
-                <FormHelperText>
-                  {errors.guid && touched.guid ? errors.guid : null}
-                </FormHelperText>
-              </FormControl>
+                        <Tooltip
+                          title="The GUID you are trying to add is already in use."
+                          placement="top"
+                        >
+                          <WarningIcon />
+                        </Tooltip>
+                      ))
+                    )}
+                  </InputAdornment>
+                }
+                label="Short Link"
+              />
+              <FormHelperText>
+                {errors.guid && touched.guid ? errors.guid : null}
+              </FormHelperText>
+            </FormControl>
 
-              <Editor value={values.content} setValue={handleChangeSetContent} />
-            </Stack>
-          </Grid>
+            <Editor value={values.content} setValue={handleChangeSetContent} />
+          </Stack>
+        </Grid>
 
           <Grid item xs={3} sx={{ 
             pl: 2,
             backgroundColor: 'rgba(255, 255, 255, 0.03)'
           }}>
-            <Stack spacing={2}>
+          <Stack spacing={2}>
               <TableOfContents content={values.content} />
-              <Card>
-                <StyledCardHeader
-                  title="Settings"
-                  action={
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={
-                        !isValid || guidExistsLoading || guidExists === true
-                      }
-                    >
-                      PUBLISH
-                    </Button>
-                  }
-                />
-                <CardContent>
-                  <Stack spacing={2}>
-                    <DatePicker
-                      label="Date"
-                      value={new Date(values.publishingDate)}
-                      onChange={(date) => setFieldValue("publishingDate", date)}
-                      slotProps={{
-                        textField: { size: "small", fullWidth: true },
-                      }}
-                    />
-                    <Box display="flex" justifyContent="flex-end">
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={values.isShow}
+            <Card>
+              <StyledCardHeader
+                title="Settings"
+                action={
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={
+                      !isValid || guidExistsLoading || guidExists === true
+                    }
+                  >
+                    PUBLISH
+                  </Button>
+                }
+              />
+              <CardContent>
+                <Stack spacing={2}>
+                  <DatePicker
+                    label="Date"
+                    value={new Date(values.publishingDate)}
+                    onChange={(date) => setFieldValue("publishingDate", date)}
+                    slotProps={{
+                      textField: { size: "small", fullWidth: true },
+                    }}
+                  />
+                  <Box display="flex" justifyContent="flex-end">
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={values.isShow}
                               onChange={(e, checked) => setFieldValue("isShow", checked)}
-                            />
-                          }
-                          label={values.isShow ? "Active" : "Inactive"}
-                        />
-                      </FormGroup>
-                    </Box>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Stack>
-          </Grid>
+                          />
+                        }
+                        label={values.isShow ? "Active" : "Inactive"}
+                      />
+                    </FormGroup>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Stack>
         </Grid>
-      </form>
+      </Grid>
+    </form>
     </>
   );
 }

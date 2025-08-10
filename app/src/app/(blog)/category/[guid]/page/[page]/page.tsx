@@ -94,45 +94,45 @@ export default async function BlogCategoryPaging({
 
 export async function generateStaticParams() {
   try {
-    const categories = (
-      await CategoryService.getItems({
-        paging: 0,
-      })
-    )?.data as CategoryModel[];
+  const categories = (
+    await CategoryService.getItems({
+      paging: 0,
+    })
+  )?.data as CategoryModel[];
 
     if (!categories) return [];
 
-    let categoryGuidTotalPages = [];
+  let categoryGuidTotalPages = [];
 
-    for await (const category of categories) {
-      const articlePaging = (
-        await ArticleService.getItems({
-          category: category._id,
-          paging: 1,
-          page: 1,
-          pageSize: PAGE_SIZE,
-        })
-      )?.data as ListResponseModel<ArticleModel[]>;
+  for await (const category of categories) {
+    const articlePaging = (
+      await ArticleService.getItems({
+        category: category._id,
+        paging: 1,
+        page: 1,
+        pageSize: PAGE_SIZE,
+      })
+    )?.data as ListResponseModel<ArticleModel[]>;
 
-      categoryGuidTotalPages.push({
-        guid: category.guid,
+    categoryGuidTotalPages.push({
+      guid: category.guid,
         totalPages: articlePaging?.totalPages || 0,
+    });
+  }
+
+  const paths = new Array<StaticPathParams>();
+
+  for (const item of categoryGuidTotalPages) {
+    if (item.totalPages <= 1) continue;
+    [...Array(item.totalPages)].forEach((_, i) => {
+      paths.push({
+        guid: item.guid,
+        page: String(i + 1),
       });
-    }
+    });
+  }
 
-    const paths = new Array<StaticPathParams>();
-
-    for (const item of categoryGuidTotalPages) {
-      if (item.totalPages <= 1) continue;
-      [...Array(item.totalPages)].forEach((_, i) => {
-        paths.push({
-          guid: item.guid,
-          page: String(i + 1),
-        });
-      });
-    }
-
-    return paths;
+  return paths;
   } catch (error) {
     console.error('Error generating static params for category pages:', error);
     return [];

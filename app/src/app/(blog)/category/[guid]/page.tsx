@@ -36,8 +36,8 @@ type BlogCategoryGuidProps = {
 
 export default async function CategoryGuid({ params }: BlogCategoryGuidProps) {
   try {
-    const categoryData = await CategoryService.getItemByGuid(params?.guid);
-    
+  const categoryData = await CategoryService.getItemByGuid(params?.guid);
+
     if (!categoryData?.data) return notFound();
 
     const articles = (await ArticleService.getItems({
@@ -51,62 +51,62 @@ export default async function CategoryGuid({ params }: BlogCategoryGuidProps) {
 
     if (!articles) return notFound();
 
-    return (
-      <Fragment>
-        <Paper
-          elevation={1}
-          component="header"
-          sx={{ 
-            padding: 1, 
-            paddingRight: 2, 
-            paddingLeft: 2, 
-            marginBottom: 3,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}
-        >
-          <Box>
-            <Typography
-              component="h1"
-              variant="subtitle1"
-              fontWeight="bold"
+  return (
+    <Fragment>
+      <Paper
+        elevation={1}
+        component="header"
+        sx={{ 
+          padding: 1, 
+          paddingRight: 2, 
+          paddingLeft: 2, 
+          marginBottom: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Box>
+          <Typography
+            component="h1"
+            variant="subtitle1"
+            fontWeight="bold"
             >{`Category: ${categoryData.data.title}`}</Typography>
             {categoryData.data.description && (
-              <Typography component="p" variant="caption" color="gray">
+            <Typography component="p" variant="caption" color="gray">
                 {categoryData.data.description}
-              </Typography>
-            )}
-          </Box>
-          <Link href="/" style={{ textDecoration: 'none' }}>
-            <IconButton 
-              size="small"
-              aria-label="remove category filter"
-              sx={{ 
-                ml: 2,
-                '&:hover': {
-                  backgroundColor: 'action.hover'
-                }
-              }}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Link>
-        </Paper>
-        <Box component="section">
+            </Typography>
+          )}
+        </Box>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <IconButton 
+            size="small"
+            aria-label="remove category filter"
+            sx={{ 
+              ml: 2,
+              '&:hover': {
+                backgroundColor: 'action.hover'
+              }
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Link>
+      </Paper>
+      <Box component="section">
           {articles.results?.map((item: ArticleModel) => (
             <ArticleItem data={item} key={item._id} />
-          ))}
-        </Box>
+        ))}
+      </Box>
         <Box component="section" sx={{ mt: 4 }}>
-          <ServerPagination
+        <ServerPagination
             routerUrl={`category/${params.guid}/page`}
             totalPages={articles.totalPages}
             currentPage={1}
-          />
-        </Box>
-      </Fragment>
-    );
+        />
+      </Box>
+    </Fragment>
+  );
   } catch (error) {
     console.error('Error fetching category data:', error);
     return notFound();
@@ -115,19 +115,19 @@ export default async function CategoryGuid({ params }: BlogCategoryGuidProps) {
 
 export async function generateStaticParams() {
   try {
-    const categories = (
-      await CategoryService.getItems({
-        paging: 0,
-        sType: "parent",
-        s: "null",
-      })
-    )?.data as CategoryModel[];
+  const categories = (
+    await CategoryService.getItems({
+      paging: 0,
+      sType: "parent",
+      s: "null",
+    })
+  )?.data as CategoryModel[];
 
     if (!categories) return [];
 
-    return categories.map((item) => ({
-      guid: item.guid,
-    }));
+  return categories.map((item) => ({
+    guid: item.guid,
+  }));
   } catch (error) {
     console.error('Error generating static params for categories:', error);
     return [];
@@ -138,12 +138,12 @@ export async function generateMetadata({
   params,
 }: BlogCategoryGuidProps): Promise<Metadata> {
   try {
-    const guid = params.guid;
-    const item = await CategoryService.getItemByGuid(guid);
+  const guid = params.guid;
+  const item = await CategoryService.getItemByGuid(guid);
 
-    return {
-      title: `Category: ${item?.data?.title}`,
-    };
+  return {
+    title: `Category: ${item?.data?.title}`,
+  };
   } catch (error) {
     console.error('Error generating metadata:', error);
     return {

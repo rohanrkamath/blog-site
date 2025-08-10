@@ -106,11 +106,11 @@ export default function Editor({ value, setValue }: EditorProps) {
   };
 
   return (
-    <MDEditor 
+      <MDEditor
       ref={editorRef}
-      value={value} 
+        value={value}
       onChange={(val) => setValue(val || "")} 
-      height={800}
+        height={800}
       commands={[
         ...commands.getCommands(),
         {
@@ -119,7 +119,7 @@ export default function Editor({ value, setValue }: EditorProps) {
           buttonProps: { "aria-label": "Add image" },
           icon: <ImageCommandComponent index={0} disabled={false} executeCommand={executeCommand} command={{ name: "image", keyCommand: "image" }} />,
         },
-      ]}
-    />
+        ]}
+      />
   );
 }

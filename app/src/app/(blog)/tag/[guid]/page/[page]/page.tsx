@@ -88,45 +88,45 @@ export default async function BlogTagPaging({ params }: BlogTagPagingProps) {
 
 export async function generateStaticParams() {
   try {
-    const tags = (
-      await TagService.getItems({
-        paging: 0,
-      })
-    )?.data as TagModel[];
+  const tags = (
+    await TagService.getItems({
+      paging: 0,
+    })
+  )?.data as TagModel[];
     
     if (!tags) return [];
     
-    let tagGuidTotalPages = [];
+  let tagGuidTotalPages = [];
 
-    for await (const tag of tags) {
-      const articlePaging = (
-        await ArticleService.getItems({
-          tag: tag._id,
-          paging: 1,
-          page: 1,
-          pageSize: PAGE_SIZE,
-        })
-      )?.data as ListResponseModel<ArticleModel[]>;
+  for await (const tag of tags) {
+    const articlePaging = (
+      await ArticleService.getItems({
+        tag: tag._id,
+        paging: 1,
+        page: 1,
+        pageSize: PAGE_SIZE,
+      })
+    )?.data as ListResponseModel<ArticleModel[]>;
 
-      tagGuidTotalPages.push({
-        guid: tag.guid,
+    tagGuidTotalPages.push({
+      guid: tag.guid,
         totalPages: articlePaging?.totalPages || 0,
+    });
+  }
+
+  const paths = new Array<StaticPathParams>();
+
+  for (const tag of tagGuidTotalPages) {
+    if (tag.totalPages <= 1) continue;
+    [...Array(tag.totalPages)].forEach((_, i) => {
+      paths.push({
+        guid: tag.guid,
+        page: String(i + 1),
       });
-    }
+    });
+  }
 
-    const paths = new Array<StaticPathParams>();
-
-    for (const tag of tagGuidTotalPages) {
-      if (tag.totalPages <= 1) continue;
-      [...Array(tag.totalPages)].forEach((_, i) => {
-        paths.push({
-          guid: tag.guid,
-          page: String(i + 1),
-        });
-      });
-    }
-
-    return paths;
+  return paths;
   } catch (error) {
     console.error('Error generating static params for tag pages:', error);
     return [];

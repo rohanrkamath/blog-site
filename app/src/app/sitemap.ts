@@ -14,27 +14,27 @@ import { APP_URL } from "@/config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const articlesData = await ArticleService.getItems();
-    const pagesData = await PageService.getItems();
+  const articlesData = await ArticleService.getItems();
+  const pagesData = await PageService.getItems();
 
-    const articles = articlesData?.data as ArticleModel[];
-    const pages = pagesData?.data as PageModel[];
+  const articles = articlesData?.data as ArticleModel[];
+  const pages = pagesData?.data as PageModel[];
 
     const articleSitemap: MetadataRoute.Sitemap = articles?.map((item) => ({
-      url: `${`${APP_URL}/${item.guid}`}`,
-      lastModified: new Date(item.updatedAt),
-      changeFrequency: "daily",
-      //priority: 1,
+    url: `${`${APP_URL}/${item.guid}`}`,
+    lastModified: new Date(item.updatedAt),
+    changeFrequency: "daily",
+    //priority: 1,
     })) || [];
 
     const pageSitemap: MetadataRoute.Sitemap = pages?.map((item) => ({
-      url: `${`${APP_URL}/${item.guid}`}`,
-      lastModified: new Date(item.updatedAt),
-      changeFrequency: "daily",
-      priority: 1,
+    url: `${`${APP_URL}/${item.guid}`}`,
+    lastModified: new Date(item.updatedAt),
+    changeFrequency: "daily",
+    priority: 1,
     })) || [];
 
-    return [...articleSitemap, ...pageSitemap];
+  return [...articleSitemap, ...pageSitemap];
   } catch (error) {
     console.error('Error generating sitemap:', error);
     // Return empty sitemap if backend is not accessible during build

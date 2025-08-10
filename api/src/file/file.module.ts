@@ -72,20 +72,20 @@ const getUploadPath = (configService: ConfigService<IEnv>) => {
         const uploadPath = getUploadPath(configService)
         
         return {
-          storage: diskStorage({
-            destination: (req, file, cb) => {
-              const { path } = req.body
+        storage: diskStorage({
+          destination: (req, file, cb) => {
+            const { path } = req.body
               let dir = uploadPath
-              if (path) dir += `/${path}`
-              if (!fs.existsSync(dir)) {
-                return fs.mkdir(dir, { recursive: true }, (error) =>
-                  cb(error, dir),
-                )
-              }
-              return cb(null, dir)
-            },
-            filename: editFileName,
-          }),
+            if (path) dir += `/${path}`
+            if (!fs.existsSync(dir)) {
+              return fs.mkdir(dir, { recursive: true }, (error) =>
+                cb(error, dir),
+              )
+            }
+            return cb(null, dir)
+          },
+          filename: editFileName,
+        }),
         }
       },
       inject: [ConfigService],

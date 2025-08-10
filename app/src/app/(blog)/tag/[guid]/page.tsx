@@ -85,18 +85,18 @@ export default async function BlogTagGuid({ params }: BlogTagGuidProps) {
 
 export async function generateStaticParams() {
   try {
-    const items = (
-      await TagService.getItems({
-        paging: 0,
-      })
-    )?.data as TagModel[];
+  const items = (
+    await TagService.getItems({
+      paging: 0,
+    })
+  )?.data as TagModel[];
 
     if (!items) return [];
 
-    const paths = items?.map((item) => ({
-      guid: item.guid,
-    }));
-    return paths ?? [];
+  const paths = items?.map((item) => ({
+    guid: item.guid,
+  }));
+  return paths ?? [];
   } catch (error) {
     console.error('Error generating static params for tags:', error);
     return [];
