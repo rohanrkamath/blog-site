@@ -1,20 +1,20 @@
-// Color palette for tags - each tag gets a unique color
+// Color palette for tags - each tag gets a unique color (calm, muted tones)
 export const TAG_COLORS = [
-  '#4ade80', // green
-  '#f97316', // orange
-  '#06b6d4', // cyan
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#f59e0b', // amber
-  '#10b981', // emerald
-  '#3b82f6', // blue
-  '#ef4444', // red
-  '#84cc16', // lime
-  '#f43f5e', // rose
-  '#06b6d4', // sky
-  '#a855f7', // purple
-  '#f97316', // orange
-  '#22c55e', // green
+  '#6b7280', // muted gray
+  '#9ca3af', // light gray
+  '#d1d5db', // very light gray
+  '#e5e7eb', // off-white
+  '#f3f4f6', // light off-white
+  '#e5e7eb', // soft gray
+  '#d1d5db', // light gray
+  '#9ca3af', // medium gray
+  '#6b7280', // muted gray
+  '#9ca3af', // light gray
+  '#d1d5db', // very light gray
+  '#e5e7eb', // off-white
+  '#f3f4f6', // light off-white
+  '#e5e7eb', // soft gray
+  '#d1d5db', // light gray
 ]
 
 // Get color for a specific tag based on global tag order
