@@ -15,7 +15,7 @@ export default async function HomePage() {
     <div className="homepage">
       <section>
         <h1>
-          Welcome to {SITE_CONFIG.title}
+          Welcome to Rohan Kamath's Blog
         </h1>
         <p className="welcome-description">
           {SITE_CONFIG.description}

@@ -85,7 +85,7 @@ export default function RootLayout({
                   </a>
                   <ThemeToggle />
                 </div>
-                <div className="mobile-nav-toggle">
+                <div className="mobile-nav">
                   <MobileNav />
                 </div>
               </nav>
