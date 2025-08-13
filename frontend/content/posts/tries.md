@@ -1,0 +1,116 @@
+---
+title: "Tries"
+description: "Notes on Tries or Prefix Tree."
+date: "2025-08-11"
+tags: ["DSA", "notes"] 
+categories: ["Data Structures and Algorithms"]
+published: true
+---
+
+## Definition 
+
+Trie is a search tree data structure mainly used for storing and retieving strings from an array or dictionary.
+
+## Node Structure
+
+1. `children` - The children (letters) the node has, dictionary where `{value: TrieNode}` 
+2. `isTerminal` - bool flag indicating the end of a branch (word)
+
+```python
+
+class TrieNode:
+    def __init__(self):
+        self.children = dict()
+        self.isTerminal = False
+```
+
+## Operations
+
+1. Insertion - Add a word to the tree, EG: apple
+2. Search - Search for a word (`isTerminal=True`)
+3. Prefix search - Search for the word starting from prefix (`isTerminal` doesnt matter)
+4. Deletion - Delete word from the tree, by changing isTerminal from `True` to `False`, optionally can prune as well.
+
+## Trie code with operations
+```python
+
+class TrieNode:
+    def __init__(self):
+        self.children = dict()
+        self.isTerminal = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insertion(self, word: str) -> None:
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                curr.children[c] = TrieNode()
+            curr = curr.children[c]
+        
+        curr.isTerminal = True
+
+    def search(self, work: str) -> bool:
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                return False
+            curr = curr.children[c]
+
+        return curr.isTerminal
+
+    def searchPrefix(self, prefix: str) -> bool:
+        curr = self.root
+
+        for c in prefix:
+            if c not in curr.children:
+                return False
+            curr = curr.children[c]
+
+        return True
+
+    def deletion(self, word: str) -> bool:
+        found = False
+
+        def _del(node, i):
+            nonlocal found
+
+            if i == len(word):
+                if not node.isTerminal:
+                    return False
+                node.isTerminal = False
+                found = True
+                return len(node.children) == 0
+
+            ch = word[i]
+            if ch not in node.children:
+                return False
+
+            should_prune = _del(node.children[ch], i + 1)
+
+            if should_prune:
+                del node.children[ch]
+
+            return (not node.isTerminal) and (len(node.children) == 0)
+
+        _del(self.root, 0)
+        return found
+
+```
+
+## Time and Space Complexity for the Operations
+
+| Function               | Time Complexity | Space Complexity (Auxiliary) |
+| ---------------------- | --------------- | ---------------------------- |
+| `insertion(word)`      | **O(L)**        | O(L) (new nodes worst case)  |
+| `search(word)`         | **O(L)**        | O(1)                         |
+| `searchPrefix(prefix)` | **O(L)**        | O(1)                         |
+| `deletion(word)`       | **O(L)**        | O(L) recursion stack         |
+
+
+
+

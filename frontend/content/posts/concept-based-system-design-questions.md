@@ -4,7 +4,7 @@ description: "These are some concepts I studied and making notes of it here."
 date: "2025-08-09"
 tags: ["system design concepts"] 
 categories: ["system design"]
-published: true
+published: false 
 ---
 
 # Introduction 
