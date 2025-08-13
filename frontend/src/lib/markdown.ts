@@ -1,9 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
+import { remark } from 'remark'; // Still using remark for initial parsing
 import remarkGfm from 'remark-gfm';
-import remarkHtml from 'remark-html';
+import remarkRehype from 'remark-rehype';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeStringify from 'rehype-stringify';
 const readingTime = require('reading-time');
 
 export interface PostMatter {
@@ -35,7 +37,7 @@ export function getPostSlugs(): string[] {
   if (!fs.existsSync(postsDirectory)) {
     return [];
   }
-  return fs.readdirSync(postsDirectory).filter(file => file.endsWith('.md'));
+  return fs.readdirSync(postsDirectory).filter(file => file.endsWith('.mdx') || file.endsWith('.md'));
 }
 
 export function getPageSlugs(): string[] {
@@ -47,19 +49,29 @@ export function getPageSlugs(): string[] {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const realSlug = slug.replace(/\.md$/, '');
-    const fullPath = path.join(postsDirectory, `${realSlug}.md`);
+    const realSlug = slug.replace(/\.mdx?$/, ''); // Adjusted for MDX
+    const fullPath = path.join(postsDirectory, `${realSlug}.mdx`); // Prioritize MDX
     
-    if (!fs.existsSync(fullPath)) {
-      return null;
+    let fileContents;
+    if (fs.existsSync(fullPath)) {
+      fileContents = fs.readFileSync(fullPath, 'utf8');
+    } else {
+      const mdPath = path.join(postsDirectory, `${realSlug}.md`);
+      if (fs.existsSync(mdPath)) {
+        fileContents = fs.readFileSync(mdPath, 'utf8');
+      } else {
+        return null;
+      }
     }
     
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
     
+    // Process content through remark/rehype with syntax highlighting
     const processedContent = await remark()
       .use(remarkGfm)
-      .use(remarkHtml)
+      .use(remarkRehype)
+      .use(rehypeHighlight)
+      .use(rehypeStringify)
       .process(content);
     
     const html = processedContent.toString();
@@ -93,7 +105,9 @@ export async function getPageBySlug(slug: string): Promise<Post | null> {
     
     const processedContent = await remark()
       .use(remarkGfm)
-      .use(remarkHtml)
+      .use(remarkRehype)
+      .use(rehypeHighlight)
+      .use(rehypeStringify)
       .process(content);
     
     const html = processedContent.toString();

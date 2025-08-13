@@ -4,6 +4,7 @@ import { SITE_CONFIG } from '@/config'
 import ThemeToggle from '@/components/ThemeToggle'
 import MobileNav from '@/components/MobileNav'
 import './globals.css'
+import 'highlight.js/styles/atom-one-dark.css' // NEW: Highlight.js theme for syntax highlighting
 
 export const metadata: Metadata = {
   title: {

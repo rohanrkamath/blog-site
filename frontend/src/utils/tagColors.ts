@@ -2,7 +2,7 @@
 export const TAG_COLORS = [
   '#7c3aed', // violet-600 - soft purple
   '#059669', // emerald-600 - muted green
-  '#dc2626', // red-600 - muted red
+  '#e11d48', // rose-600 - soft pink-red (much calmer)
   '#2563eb', // blue-600 - soft blue
   '#ea580c', // orange-600 - muted orange
   '#7c2d12', // brown-600 - warm brown
@@ -12,7 +12,7 @@ export const TAG_COLORS = [
   '#9333ea', // purple-600 - muted purple
   '#c2410c', // orange-700 - darker orange
   '#16a34a', // green-600 - soft green
-  '#dc2626', // red-600 - muted red
+  '#e11d48', // rose-600 - soft pink-red (much calmer)
   '#2563eb', // blue-600 - soft blue
   '#7c3aed', // violet-600 - soft purple
 ]

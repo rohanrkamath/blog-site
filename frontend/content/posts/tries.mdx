@@ -2,14 +2,14 @@
 title: "Tries"
 description: "Notes on Tries or Prefix Tree."
 date: "2025-08-11"
-tags: ["DSA", "notes"] 
+tags: ["DSA", "trie", "notes"] 
 categories: ["Data Structures and Algorithms"]
 published: true
 ---
 
 ## Definition 
 
-Trie is a search tree data structure mainly used for storing and retieving strings from an array or dictionary.
+Trie is a search tree data structure mainly used for storing and retrieving strings from an array or dictionary.
 
 ## Node Structure
 
@@ -17,7 +17,6 @@ Trie is a search tree data structure mainly used for storing and retieving strin
 2. `isTerminal` - bool flag indicating the end of a branch (word)
 
 ```python
-
 class TrieNode:
     def __init__(self):
         self.children = dict()
@@ -32,8 +31,8 @@ class TrieNode:
 4. Deletion - Delete word from the tree, by changing isTerminal from `True` to `False`, optionally can prune as well.
 
 ## Trie code with operations
-```python
 
+```python
 class TrieNode:
     def __init__(self):
         self.children = dict()
@@ -53,7 +52,7 @@ class Trie:
         
         curr.isTerminal = True
 
-    def search(self, work: str) -> bool:
+    def search(self, word: str) -> bool:
         curr = self.root
 
         for c in word:
@@ -99,18 +98,13 @@ class Trie:
 
         _del(self.root, 0)
         return found
-
 ```
 
 ## Time and Space Complexity for the Operations
 
 | Function               | Time Complexity | Space Complexity (Auxiliary) |
 | ---------------------- | --------------- | ---------------------------- |
-| `insertion(word)`      | **O(L)**        | O(L) (new nodes worst case)  |
-| `search(word)`         | **O(L)**        | O(1)                         |
-| `searchPrefix(prefix)` | **O(L)**        | O(1)                         |
-| `deletion(word)`       | **O(L)**        | O(L) recursion stack         |
-
-
-
-
+| `insertion(word)`      |   O(L)          | O(L) (new nodes worst case)  |
+| `search(word)`         |   O(L)          | O(1)                         |
+| `searchPrefix(prefix)` |   O(L)          | O(1)                         |
+| `deletion(word)`       |   O(L)          | O(L) (recursion stack)         | 
